@@ -54,11 +54,11 @@ class User extends Authenticatable
         return $this->employer()->exists();
     }
     // app/Models/User.php
-public function applications()
-{
-    return $this->hasMany(Application::class);
-}
- /**
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+    /**
      * Check if user has already applied for a specific internship.
      */
     public function hasAppliedTo(Internship $internship): bool
@@ -67,7 +67,7 @@ public function applications()
             ->where('internship_id', $internship->id)
             ->exists();
     }
-    
+
     /**
      * Get all pending applications.
      */
@@ -75,7 +75,7 @@ public function applications()
     {
         return $this->applications()->where('status', 'pending');
     }
-    
+
     /**
      * Get all accepted applications.
      */
@@ -83,4 +83,30 @@ public function applications()
     {
         return $this->applications()->where('status', 'accepted');
     }
+    // ...existing code...
+
+    /**
+     * Get the admin record associated with the user.
+     */
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    /**
+     * Check if user is an admin
+     */
+    public function isAdmin()
+    {
+        return $this->admin()->exists();
+    }
+
+    /**
+     * Check if user is a super admin
+     */
+    public function isSuperAdmin()
+    {
+        return $this->admin && $this->admin->role === 'super_admin';
+    }
 }
+;

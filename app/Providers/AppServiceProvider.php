@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Policies\AdminPolicy;
 
 
 
@@ -19,7 +20,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-
+    protected $policies = [
+        // Other policies...
+        User::class => AdminPolicy::class,
+    ];
     /**
      * Bootstrap any application services.
      */
@@ -29,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
     Gate::define('employer', function (User $user) {
         return $user->isEmployer();
     });
+    Gate::define('access-admin', [AdminPolicy::class, 'accessAdmin']);
+        Gate::define('manage-users', [AdminPolicy::class, 'manageUsers']);
+        Gate::define('promote-users', [AdminPolicy::class, 'promoteUsers']);
+        Gate::define('demote-admins', [AdminPolicy::class, 'demoteAdmins']);
 }
 }

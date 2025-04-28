@@ -12,16 +12,24 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                
+                     @can('access-admin')
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Dashboard') }}
+                    </x-nav-link>
+                    @else
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                     @endcan
+
                     <x-nav-link :href="route('myinternships')" :active="request()->routeIs('myinternships')">
                         {{ __('My Internships') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('jkk')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                   
+                    
+                    
                 </div>
             </div>
 

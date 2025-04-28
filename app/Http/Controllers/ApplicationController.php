@@ -91,7 +91,7 @@ class ApplicationController extends Controller
     public function index(Request $request)
     {
         // Check for employer or admin accessAuth::user()->employer
-        if (!Auth::user()->employer) {
+        if (!Auth::user()->isEmployer()) {
             abort(403, 'You do not have permission to view this page');
         }
 
@@ -157,7 +157,7 @@ class ApplicationController extends Controller
     public function show(Application $application)
     {
         // Check if current user has permission to view this application
-        if (Auth::user()->employer) {
+        if (Auth::user()->isEmployer()) {
             // Employer can only view applications for their internships
             $hasAccess = $application->internship->employer_id == Auth::user()->employer->id;
         } else {

@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             InternshipSeeder::class,
         ]);
+        $this->call([
+            // ...other seeders...
+            AdminSeeder::class,
+        ]);
     }
 }

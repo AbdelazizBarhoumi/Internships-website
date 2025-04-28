@@ -32,7 +32,7 @@ class InternshipController extends Controller
         $query = Internship::with(['employer', 'tags']);
         
         // Filter by employer if viewing own listings
-        if ($request->has('employer') && Auth::check() && Auth::user()->employer) {
+        if ($request->has('employer') && Auth::check() && Auth::user()->isEmployer()) {
             $query->where('employer_id', Auth::user()->employer->id);
         }
         
@@ -53,7 +53,7 @@ class InternshipController extends Controller
     public function myInternships()
     {
         // Check if user has an employer profile
-        if (!Auth::user()->employer) {
+        if (!Auth::user()->isEmployer()) {
             return redirect()->route('home')
                 ->with('error', 'You need an employer profile to manage internships.');
         }
@@ -77,7 +77,7 @@ class InternshipController extends Controller
     public function create()
     {
         // Check if user has an employer profile
-        if (!Auth::user()->employer) {
+        if (!Auth::user()->isEmployer()) {
             return redirect()->route('employer.create')
                 ->with('error', 'You need to create an employer profile first.');
         }
@@ -96,7 +96,7 @@ class InternshipController extends Controller
     public function store(Request $request)
     {
         // Check if user has an employer profile
-        if (!Auth::user()->employer) {
+        if (!Auth::user()->isEmployer()) {
             return redirect()->route('employer.create')
                 ->with('error', 'You need to create an employer profile first.');
         }

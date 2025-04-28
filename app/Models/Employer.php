@@ -14,7 +14,7 @@ class Employer extends Model
         'employer_email',
         'employer_logo'
     ];
-    
+
     public function internships()
     {
         return $this->hasMany(Internship::class);
@@ -22,5 +22,5 @@ class Employer extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-}
+    }
 }
