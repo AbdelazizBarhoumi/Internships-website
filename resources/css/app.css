@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Flip Card Styles */
+.flip-card {
+  perspective: 1000px; /* Adds 3D perspective */
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg); /* Flips the card on hover */
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* Hides the back side when not facing */
+}
+
+.flip-card-front {
+  z-index: 2; /* Ensures front is on top initially */
+}
+
+.flip-card-back {
+  transform: rotateY(180deg); /* Rotates back side to face away initially */
+}
+/* Blur Transition Styles */
+
+/* Blur Transition Styles */
+.card-content {
+  position: relative; /* Ensures the card content stays in the normal flow */
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.3); /* Adds a slight dark overlay to make "Learn More" more readable */
+  z-index: 1; /* Ensures the overlay appears above the blurred content */
+}
+.btn {
+  @apply inline-flex items-center justify-center py-2 px-4 rounded-md font-medium transition-colors;
+}
+.btn-blue {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+.btn-red {
+  @apply bg-red-500 text-white hover:bg-red-600;
+}
+.btn-gray {
+  @apply bg-gray-500 text-white hover:bg-gray-600;
+}
+.btn-indigo {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700;
+}
+.btn-green {
+  @apply bg-green-100 text-green-800;
+}
