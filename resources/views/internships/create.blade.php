@@ -33,7 +33,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-        <x-forms.input name="url" label="Company Website" required placeholder="e.g. https://example.com"/>
         <x-forms.input name="duration" label="Duration" placeholder="e.g. 3 months, Summer 2025"/>
       </div>
 
@@ -57,8 +56,8 @@
       <h2 class="text-lg font-medium text-gray-900 mb-4">Application Settings</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <x-forms.input type="date" name="deadline" label="Application Deadline" 
-          placeholder="Select a deadline (optional)"/>
+        <x-forms.input type="date" name="deadline_date" label="Application deadline_date" 
+          placeholder="Select a deadline_date (optional)"/>
         <x-forms.input name="positions" label="Number of Positions" type="number" min="1" 
           placeholder="e.g. 2"/>
       </div>

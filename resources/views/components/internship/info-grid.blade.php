@@ -14,6 +14,6 @@
     </div>
     <div>
         <p class="text-gray-700 font-semibold">Company Website:</p>
-        <a href="{{ $internship->url }}" class="text-blue-600 hover:underline" target="_blank">{{ $internship->url }}</a>
+        <a href="{{ $internship->employer->website }}" class="text-blue-600 hover:underline" target="_blank">{{ $internship->employer->website }}</a>
     </div>
 </div>

@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('employer_name');
             $table->string('employer_email')->unique();
             $table->string('employer_logo')->nullable();
+            $table->string('industry')->nullable();
+            $table->string('location')->nullable();
+            $table->text('description')->nullable();
+            $table->string('website')->nullable();
+            $table->string('phone', 50)->nullable();
             $table->timestamps();
         });
     }

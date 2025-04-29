@@ -38,6 +38,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'reviewing', 'interviewed', 'accepted', 'rejected'])
                   ->default('pending');
             $table->text('notes')->nullable();
+            $table->text('admin_notes')->nullable();
 
             $table->timestamps();
         });

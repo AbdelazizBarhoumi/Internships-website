@@ -11,11 +11,34 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ApplicationController extends Controller
 {
+    use AuthorizesRequests;
+    
+    /**
+     * Check if the current user is active
+     * Returns true if active, redirects if not
+     */
+    protected function checkUserIsActive()
+    {
+        if (Auth::check() && !Auth::user()->is_active) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Show application form for an internship
      */
     public function create(Internship $internship)
     {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot apply for internships.');
+        }
+        
+        $this->authorize('create', [Application::class, $internship]);
+        
         // Check if user is authenticated
         if (!Auth::check()) {
             return redirect()->route('login')
@@ -40,6 +63,14 @@ class ApplicationController extends Controller
      */
     public function store(Request $request, Internship $internship)
     {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot submit applications.');
+        }
+        
+        $this->authorize('create', [Application::class, $internship]);
+        
         // Validate form input
         $validated = $request->validate([
             'phone' => 'required|string|max:20',
@@ -90,17 +121,27 @@ class ApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        // Check for employer or admin accessAuth::user()->employer
-        if (!Auth::user()->isEmployer()) {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot view applications.');
+        }
+        
+        // Check for employer or admin access
+        if (!Auth::user()->isEmployer() && !Auth::user()->isAdmin()) {
             abort(403, 'You do not have permission to view this page');
         }
 
         $query = Application::query()->with(['user', 'internship']);
 
-        // Filter by employer's internships
-        $query->whereHas('internship', function ($q) {
-            $q->where('employer_id', Auth::user()->employer->id);
-        });
+        // Different filters for admin vs employer
+        if (Auth::user()->isEmployer()) {
+            // Filter by employer's internships
+            $query->whereHas('internship', function ($q) {
+                $q->where('employer_id', Auth::user()->employer->id);
+            });
+        }
+        // Admin can see all applications
 
         // Filter by status if provided
         if ($request->has('status') && !empty($request->status)) {
@@ -112,13 +153,14 @@ class ApplicationController extends Controller
             $query->where('internship_id', $request->internship_id);
         }
 
-        $applications = $query->latest()->paginate(20);
-
         // Get status counts for statistics
-        // Create a base query that filters by employer's internships
-        $baseQuery = Application::query()->whereHas('internship', function ($q) {
-            $q->where('employer_id', Auth::user()->employer->id);
-        });
+        // Create a base query that filters by employer's internships if needed
+        $baseQuery = Application::query();
+        if (Auth::user()->isEmployer()) {
+            $baseQuery->whereHas('internship', function ($q) {
+                $q->where('employer_id', Auth::user()->employer->id);
+            });
+        }
 
         // Apply filters for the main listing query
         $query = clone $baseQuery;
@@ -141,13 +183,15 @@ class ApplicationController extends Controller
         $reviewingCount = (clone $baseQuery)->where('status', 'reviewing')->count();
         $interviewedCount = (clone $baseQuery)->where('status', 'interviewed')->count();
         $acceptedCount = (clone $baseQuery)->where('status', 'accepted')->count();
+        $rejectedCount = (clone $baseQuery)->where('status', 'rejected')->count();
 
         return view('applications.index', compact(
             'applications',
             'pendingCount',
             'reviewingCount',
             'interviewedCount',
-            'acceptedCount'
+            'acceptedCount',
+            'rejectedCount'
         ));
     }
 
@@ -156,8 +200,17 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot view applications.');
+        }
+        
         // Check if current user has permission to view this application
-        if (Auth::user()->isEmployer()) {
+        if (Auth::user()->isAdmin()) {
+            // Admin can view all applications
+            $hasAccess = true;
+        } elseif (Auth::user()->isEmployer()) {
             // Employer can only view applications for their internships
             $hasAccess = $application->internship->employer_id == Auth::user()->employer->id;
         } else {
@@ -177,8 +230,16 @@ class ApplicationController extends Controller
      */
     public function updateStatus(Request $request, Application $application)
     {
-        // Ensure only the employer who owns this internship can update status
-        if (
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot update applications.');
+        }
+        
+        // Ensure only the employer who owns this internship or an admin can update status
+        if (Auth::user()->isAdmin()) {
+            // Allow admin access
+        } elseif (
             !Auth::user()->employer ||
             $application->internship->employer_id != Auth::user()->employer->id
         ) {
@@ -195,11 +256,22 @@ class ApplicationController extends Controller
 
         return back()->with('success', 'Application status updated successfully.');
     }
-    //updateNotes
+    
+    /**
+     * Update application notes
+     */
     public function updateNotes(Request $request, Application $application)
     {
-        // Ensure only the employer who owns this internship can update notes
-        if (
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot update applications.');
+        }
+        
+        // Ensure only the employer who owns this internship or an admin can update notes
+        if (Auth::user()->isAdmin()) {
+            // Allow admin access
+        } elseif (
             !Auth::user()->employer ||
             $application->internship->employer_id != Auth::user()->employer->id
         ) {
@@ -215,5 +287,56 @@ class ApplicationController extends Controller
         ]);
 
         return back()->with('success', 'Application notes updated successfully.');
+    }
+    
+    /**
+     * Download resume
+     */
+    public function downloadResume(Application $application)
+    {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot download files.');
+        }
+        
+        // Check if user has permission to download
+        $canDownload = Auth::user()->isAdmin() || 
+                      (Auth::user()->isEmployer() && $application->internship->employer_id == Auth::user()->employer->id) ||
+                      $application->user_id == Auth::id();
+                      
+        if (!$canDownload) {
+            abort(403, 'You do not have permission to download this file');
+        }
+        
+        return response()->download(storage_path('app/public/' . $application->resume_path));
+    }
+    
+    /**
+     * Download transcript if exists
+     */
+    public function downloadTranscript(Application $application)
+    {
+        // Check if user is active
+        if (Auth::check() && !Auth::user()->is_active) {
+        return redirect()->route('account.suspended')
+                ->with('error', 'Your account is currently suspended. You cannot download files.');
+        }
+        
+        // Check if transcript exists
+        if (empty($application->transcript_path)) {
+            return back()->with('error', 'No transcript was uploaded with this application.');
+        }
+        
+        // Check if user has permission to download
+        $canDownload = Auth::user()->isAdmin() || 
+                      (Auth::user()->isEmployer() && $application->internship->employer_id == Auth::user()->employer->id) ||
+                      $application->user_id == Auth::id();
+                      
+        if (!$canDownload) {
+            abort(403, 'You do not have permission to download this file');
+        }
+        
+        return response()->download(storage_path('app/public/' . $application->transcript_path));
     }
 }

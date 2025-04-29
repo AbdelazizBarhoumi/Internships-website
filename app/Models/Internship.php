@@ -20,12 +20,13 @@ class Internship extends Model
        'salary',
        'location',
        'schedule',
-       'url',
        'featured',
        'description',    // Add this field
        'duration',       // Add this field
-       'deadline',       // Add this field
-       'positions'       // Add this field
+       'deadline_date',       // Add this field
+       'positions',       // Add this field
+       'type',           // Add this field
+       'requirements',    // Add this field
    ];
 
    /**
@@ -35,7 +36,7 @@ class Internship extends Model
     */
    protected $casts = [
        'featured' => 'boolean',
-       'deadline' => 'date',
+       'deadline_date' => 'date',
        'positions' => 'integer'
    ];
 
@@ -147,7 +148,7 @@ class Internship extends Model
     }
     public function isExpired()
 {
-    return $this->deadline && $this->deadline->isPast();
+    return $this->deadline_date && $this->deadline_date->isPast();
 }
 
 // Add this method for displaying positions status
@@ -157,9 +158,9 @@ public function getAvailablePositionsCount()
     return $this->positions ? ($this->positions - $filled) : null;
 }
 
-// Add this accessor for formatted deadline
-public function getDeadlineFormattedAttribute()
+// Add this accessor for formatted deadline_date
+public function getdeadline_dateFormattedAttribute()
 {
-    return $this->deadline ? $this->deadline->format('M d, Y') : 'No deadline';
+    return $this->deadline_date ? $this->deadline_date->format('M d, Y') : 'No deadline_date';
 }
 }

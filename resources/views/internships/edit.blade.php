@@ -58,15 +58,7 @@
         </x-forms.select>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-        <x-forms.input 
-          name="url" 
-          label="Company Website" 
-          required 
-          placeholder="e.g. https://example.com"
-          :value="$internship->url"
-        />
-        
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">        
         <x-forms.input 
           name="duration" 
           label="Duration" 
@@ -116,10 +108,10 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <x-forms.input 
           type="date" 
-          name="deadline" 
-          label="Application Deadline" 
-          placeholder="Select a deadline (optional)"
-          :value="$internship->deadline ? $internship->deadline->format('Y-m-d') : ''"
+          name="deadline_date" 
+          label="Application deadline_date" 
+          placeholder="Select a deadline_date (optional)"
+          :value="$internship->deadline_date ? $internship->deadline_date->format('Y-m-d') : ''"
         />
         
         <x-forms.input 

@@ -30,7 +30,6 @@ class InternshipFactory extends Factory
             ]),
             'location' => fake()->city() . ', ' . fake()->stateAbbr(),
             'schedule' => fake()->randomElement(['Full-time', 'Part-time', 'Remote', 'Hybrid']),
-            'url' => fake()->url(),
             'description' => fake()->paragraphs(3, true),
             'duration' => fake()->randomElement([
                 '3 months', 
@@ -39,7 +38,7 @@ class InternshipFactory extends Factory
                 '6 months', 
                 'Ongoing'
             ]),
-            'deadline' => fake()->dateTimeBetween('+1 week', '+3 months'),
+            'deadline_date' => fake()->dateTimeBetween('+1 week', '+3 months'),
             'positions' => fake()->numberBetween(1, 5),
             'featured' => fake()->boolean(20), // 20% chance of being featured
         ];
@@ -58,13 +57,13 @@ class InternshipFactory extends Factory
     }
     
     /**
-     * Create an internship with immediate deadline.
+     * Create an internship with immediate deadline_date.
      */
     public function urgent()
     {
         return $this->state(function (array $attributes) {
             return [
-                'deadline' => Carbon::now()->addDays(fake()->numberBetween(2, 7)),
+                'deadline_date' => Carbon::now()->addDays(fake()->numberBetween(2, 7)),
             ];
         });
     }

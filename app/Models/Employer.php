@@ -12,7 +12,13 @@ class Employer extends Model
     protected $fillable = [
         'employer_name',
         'employer_email',
-        'employer_logo'
+        'employer_logo',
+        'employer_phone',
+        'industry',
+        'location',
+        'description',
+        'website',
+        'phone',
     ];
 
     public function internships()

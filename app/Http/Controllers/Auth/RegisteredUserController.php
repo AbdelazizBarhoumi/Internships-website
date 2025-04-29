@@ -38,6 +38,12 @@ class RegisteredUserController extends Controller
             'employer_name' => ['required', 'string', 'max:255'],
             'employer_email' => ['required', 'string', 'email', 'max:255'],
             'employer_logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'industry' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'website' => ['nullable', 'string', 'url'],
+            'phone' => ['nullable', 'string', 'max:50'],
+
         ]);
 
         $user = User::create($userAttributes);
@@ -49,6 +55,12 @@ class RegisteredUserController extends Controller
             'employer_name' => $request->employer_name,
             'employer_email' => $request->employer_email,
             'employer_logo' => $logoPath,
+            'industry' => $request->industry,
+            'location' => $request->location,
+            'description' => $request->description,
+            'website' => $request->website,
+            'phone' => $request->phone,
+            
         ]);
         event(new Registered($user));
 

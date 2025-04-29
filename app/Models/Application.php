@@ -29,6 +29,7 @@ class Application extends Model
         'why_interested',
         'status',
         'notes',
+        'admin_notes',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Application extends Model
      */
     protected $casts = [
         'availability' => 'date',
+        'admin_notes' => 'string',
     ];
 
     /**
