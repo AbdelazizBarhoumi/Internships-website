@@ -17,7 +17,13 @@ class ApplicationFileController extends Controller
     public function download(Request $request, Application $application, string $type)
     {
         // Check if employer owns this application's internship
-        if (Auth::user()->employer->id !== $application->internship->employer_id) {
+        // Check if current user has access rights (employer that owns the internship, application owner, or admin)
+        $user = Auth::user();
+        $isEmployerOwner = $user->employer && $user->employer->id === $application->internship->employer_id;
+        $isApplicationOwner = $user->id === $application->user_id;
+        $isAdmin = $user->admin()->exists();
+
+        if (!$isEmployerOwner && !$isApplicationOwner && !$isAdmin) {
             abort(403, 'Unauthorized access to application documents');
         }
         

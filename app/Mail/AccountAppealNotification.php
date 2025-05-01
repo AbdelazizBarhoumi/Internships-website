@@ -2,62 +2,49 @@
 
 namespace App\Mail;
 
-use App\Models\User;
 use App\Models\AccountAppeal;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AccountAppealNotification extends Mailable
+class AccountAppealNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public $user;
+    public $appeal;
+    public $userName;
+    public $userEmail;
+    public $appealReason;
+    public $additionalInfo;
+    public $appealId;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(
-        public User $user,
-        public AccountAppeal $appeal
-    ) {
-        //
+    public function __construct(User $user, AccountAppeal $appeal)
+    {
+        $this->user = $user;
+        $this->appeal = $appeal;
+        
+        // Set public properties directly
+        $this->userName = $user->name;
+        $this->userEmail = $user->email;
+        $this->appealReason = $appeal->reason;
+        $this->additionalInfo = $appeal->additional_info;
+        $this->appealId = $appeal->id;
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
+     *
+     * @return $this
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'New Account Appeal - ' . $this->user->name,
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.account-appeal-notification',
-            with: [
-                'userName' => $this->user->name,
-                'userEmail' => $this->user->email,
-                'appealReason' => $this->appeal->reason,
-                'appealInfo' => $this->appeal->additional_info,
-                'appealId' => $this->appeal->id,
-                'userType' => $this->user->isEmployer() ? 'Employer' : 'Student',
-            ],
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject('New Account Appeal - ' . $this->userName)
+                    ->view('emails.admin.account-appeal-notification');
     }
 }

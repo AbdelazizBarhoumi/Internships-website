@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Internship Finder'),
+    'name' => env('APP_NAME', 'InternNexus'),
 
     /*
     |--------------------------------------------------------------------------

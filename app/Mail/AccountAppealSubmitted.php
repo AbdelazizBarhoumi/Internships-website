@@ -3,53 +3,40 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AccountAppealSubmitted extends Mailable
+class AccountAppealSubmitted extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public string $appealReason;
+    public ?string $additionalInfo;
+    public User $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user)
-    {
-        //
+    public function __construct(
+        User $user, 
+        string $appealReason, 
+        ?string $additionalInfo = null
+    ) {
+        $this->user = $user;
+        $this->appealReason = $appealReason;
+        $this->additionalInfo = $additionalInfo;
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
+     *
+     * @return $this
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'Account Appeal Submitted - ' . config('app.name'),
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.account-appeal-submitted',
-            with: [
-                'userName' => $this->user->name,
-            ],
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject('Account Appeal Submitted - ' . config('app.name'))
+            ->view('emails.account-appeal-submitted');
     }
 }

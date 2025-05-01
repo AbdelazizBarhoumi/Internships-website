@@ -4,22 +4,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\EmployerController;
 use Illuminate\Support\Facades\Auth;
 
 // Public routes
 Route::get('/', [InternshipController::class, 'index'])->name('home');
 Route::get('/search', SearchController::class);
-Route::get('/tags/{tag:name}', TagController::class);
-
+Route::get('/tags/{tagName}', TagController::class)->name('tags.show');
 // Authentication required routes
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {
         if (Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
+        } elseif (Auth::user()->isEmployer()) {
+            return redirect()->route('employer.dashboard');
         } else {
+            // For student/default dashboard
             return view('dashboard');
-
         }
     })->name('dashboard');
 });
@@ -78,6 +80,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/account/suspended', [App\Http\Controllers\AccountController::class, 'suspended'])
         ->name('account.suspended');
 
-    Route::post('/account/appeal', [App\Http\Controllers\AccountController::class, 'appeal'])
-        ->name('account.appeal');
+Route::post('/account/appeal', [App\Http\Controllers\AccountController::class, 'submitAppeal'])->name('account.appeal');
+});
+
+Route::middleware(['auth', 'can:employer'])->group(function () {
+    Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
+    Route::get('/employer/internships', [EmployerController::class, 'internships'])->name('employer.internships');
 });

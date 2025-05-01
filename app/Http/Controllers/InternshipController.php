@@ -63,7 +63,11 @@ class InternshipController extends Controller
         return view('internships.index', [
             'featuredInternships' => $internships[1] ?? collect(),
             'internships' => $internships[0] ?? collect(),
-            'tags' => Tag::whereHas('internships')->get(),
+            'tags' => Tag::whereHas('internships', function($query) {
+                $query->whereHas('employer.user', function($subQuery) {
+                    $subQuery->where('is_active', true);
+                })->where('is_active', true);
+            })->get(),        
         ]);
     }
 

@@ -13,15 +13,19 @@ class TagController extends Controller
      */
     public function __invoke(Request $request, $tagName)
     {
-        // Find the tag case-insensitively
-        $tag = Tag::whereRaw('LOWER(name) = ?', [strtolower($tagName)])->firstOrFail();
-        
-        $internships = $tag->internships()->paginate(20);
-        
+        // Find the tag by ID
+        $tag = Tag::findOrFail($tagName);
+
+        $internships = $tag->internships()
+            ->whereHas('employer.user', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->paginate(20);
+
         return view('results', [
             'internships' => $internships,
             'search' => $tag->name,
-            'searchedTag' => $tag // Pass the tag object
+            'searchedTag' => $tag
         ]);
     }
 }

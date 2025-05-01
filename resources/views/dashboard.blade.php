@@ -1,266 +1,90 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Dashboard') }}
+            </h2>
+            <div>
+                @if(auth()->user()->isEmployer())
+                    <a href="{{ route('internship.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        Post New Internship
+                    </a>
+                @else
+                    <a href="{{ route('home') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Find Internships
+                    </a>
+                @endif
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if(session('success'))
-                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded" role="alert">
+                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded flex items-center" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     {{ session('success') }}
                 </div>
             @endif
 
-            @if(auth()->user()->isEmployer())
-                <!-- Employer Dashboard -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Active Internships</h3>
-                            <p class="text-3xl font-bold text-indigo-600">{{ auth()->user()->employer->internships->count() }}</p>
-                            <a href="{{ route('internship.create') }}" class="mt-4 inline-flex items-center text-sm text-indigo-600 hover:text-indigo-500">
-                                Post a new internship
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Applications</h3>
-                            <p class="text-3xl font-bold text-indigo-600">
-                                {{ auth()->user()->employer->internships->sum(function($internship) { 
-                                    return $internship->applications->count(); 
-                                }) }}
-                            </p>
-                            <a href="{{ route('applications.index') }}" class="mt-4 inline-flex items-center text-sm text-indigo-600 hover:text-indigo-500">
-                                View all applications
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Pending Review</h3>
-                            <p class="text-3xl font-bold text-amber-500">
-                                {{ auth()->user()->employer->internships->sum(function($internship) { 
-                                    return $internship->applications()->where('status', 'pending')->count(); 
-                                }) }}
-                            </p>
-                            <a href="{{ route('applications.index', ['status' => 'pending']) }}" class="mt-4 inline-flex items-center text-sm text-indigo-600 hover:text-indigo-500">
-                                Review applications
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
+            @if(session('error'))
+                <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded flex items-center" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ session('error') }}
                 </div>
+            @endif
 
-                <!-- Recent Internships -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold text-gray-900">Your Internships</h3>
-                            <a href="{{ route('internship.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring ring-indigo-300">
-                                Post New
-                            </a>
-                        </div>
-                        
-                        @if(auth()->user()->employer->internships->count() > 0)
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applications</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach(auth()->user()->employer->internships->sortByDesc('created_at')->take(5) as $internship)
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm font-medium text-gray-900">
-                                                        <a href="{{ route('myinternship.show', $internship) }}">{{ $internship->title }}</a>
-                                                        </div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-500">{{ $internship->location }}</div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-500">{{ $internship->applications->count() }}</div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                    <a href="{{ route('applications.index', ['internship_id' => $internship->id]) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
-                                                    <a href="{{ route('myinternship.edit', $internship) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                                                    <a href="{{ route('myinternship.destroy', $internship) }}" 
-                                                       class="text-red-600 hover:text-red-900 mr-3" 
-                                                       onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this internship?')) document.getElementById('delete-internship-{{ $internship->id }}').submit();">
-                                                        Delete
-                                                    </a>
-                                                    <form id="delete-internship-{{ $internship->id }}" method="POST" action="{{ route('myinternship.destroy', $internship) }}" style="display: none;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            @if(auth()->user()->employer->internships->count() > 5)
-                                <div class="mt-4 text-center">
-                                    <a href="{{ route('home', ['employer' => true]) }}" class="text-sm text-indigo-600 hover:text-indigo-500">
-                                        View all internships
-                                    </a>
+            <!-- Welcome Card -->
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-lg shadow-lg mb-6 overflow-hidden">
+                <div class="px-6 py-8 md:px-8">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            @if(auth()->user()->profile_photo_path)
+                                <img class="h-14 w-14 rounded-full object-cover border-2 border-white" src="{{ Storage::url(auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}">
+                            @else
+                                <div class="h-14 w-14 rounded-full bg-white/30 flex items-center justify-center text-white text-xl font-bold">
+                                    {{ substr(auth()->user()->name, 0, 1) }}
                                 </div>
                             @endif
-                        @else
-                            <div class="text-center py-8">
-                                <p class="text-gray-500 mb-4">You haven't posted any internships yet.</p>
-                                <a href="{{ route('internship.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
-                                    Post Your First Internship
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                
-            @else
-                <!-- Applicant Dashboard -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Your Applications</h3>
-                            <p class="text-3xl font-bold text-indigo-600">{{ auth()->user()->applications->count() }}</p>
                         </div>
-                    </div>
-                    
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Pending</h3>
-                            <p class="text-3xl font-bold text-amber-500">{{ auth()->user()->applications()->where('status', 'pending')->count() }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Accepted</h3>
-                            <p class="text-3xl font-bold text-green-600">{{ auth()->user()->applications()->where('status', 'accepted')->count() }}</p>
+                        <div class="ml-5">
+                            <h2 class="text-2xl font-bold text-white">
+                                Welcome back, {{ auth()->user()->name }}!
+                            </h2>
+                            <p class="text-blue-100 mt-1">
+                                @if(auth()->user()->isEmployer())
+                                    Manage your internship postings and applications
+                                @else
+                                    Track your applications and discover new opportunities
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
+                <div class="px-6 py-3 bg-blue-800/30">
+                    <div class="text-sm text-blue-100 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Last login: {{ auth()->user()->last_login_at ? auth()->user()->last_login_at->format('M d, Y \a\t h:i a') : 'First login' }}
+                    </div>
+                </div>
+            </div>
 
-                <!-- Recent Applications -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Applications</h3>
-                        
-                        @if(auth()->user()->applications->count() > 0)
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Internship</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach(auth()->user()->applications->sortByDesc('created_at')->take(5) as $application)
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <a href="{{ route('applications.show', $application) }}" class="text-indigo-600 hover:text-indigo-900">{{ $application->internship->title }}</a>
-                                                    <div class="text-sm font-medium text-gray-900"></div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-500">{{ $application->internship->employer->company_name }}</div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-500">{{ $application->created_at->format('M d, Y') }}</div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                        @if($application->status === 'accepted') 
-                                                            bg-green-100 text-green-800
-                                                        @elseif($application->status === 'rejected')
-                                                            bg-red-100 text-red-800
-                                                        @elseif($application->status === 'interviewed')
-                                                            bg-blue-100 text-blue-800
-                                                        @elseif($application->status === 'reviewing')
-                                                            bg-yellow-100 text-yellow-800
-                                                        @else
-                                                            bg-gray-100 text-gray-800
-                                                        @endif">
-                                                        {{ $application->statusLabel }}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <div class="text-center py-8">
-                                <p class="text-gray-500 mb-4">You haven't applied for any internships yet.</p>
-                                <a href="{{ route('home') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
-                                    Browse Internships
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                
-                <!-- Recommended Internships -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recommended Internships</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach(\App\Models\Internship::where('featured', true)->latest()->take(4)->get() as $internship)
-                                <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                                    <div class="p-4">
-                                        <h4 class="font-semibold text-lg mb-1">{{ $internship->title }}</h4>
-                                        <p class="text-gray-600 text-sm mb-2">{{ $internship->employer->company_name }} • {{ $internship->location }}</p>
-                                        
-                                        @if($internship->tags->count() > 0)
-                                            <div class="flex flex-wrap gap-1 mt-2">
-                                                @foreach($internship->randomTags(3) as $tag)
-                                                    <x-tag :tag="$tag" size="small" />
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                        
-                                        <div class="mt-4">
-                                            <a href="{{ route('internship.show', $internship) }}" class="text-indigo-600 hover:text-indigo-500 text-sm font-medium">
-                                                View Details
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        
-                        <div class="mt-4 text-center">
-                            <a href="{{ route('home') }}" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-500">
-                                Browse all internships
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            @if(auth()->user()->isEmployer())
+                @include('internships.partials.dashboard.employer-view')
+            @else
+                @include('internships.partials.dashboard.student-view')
             @endif
         </div>
     </div>

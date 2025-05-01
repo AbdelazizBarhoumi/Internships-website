@@ -9,5 +9,7 @@ $classes = ($highlight
     } elseif ($size == 'small') {
         $classes .= ' text-xs px-2 py-0.5';
     }
+    
+    // Use tag ID in URL instead of name
 @endphp
-<a href="/tags/{{ strtolower($tag->name) }}" class="{{ $classes }}">{{ $tag->name }}</a>
+<a href="{{ route('tags.show', $tag->id) }}" class="{{ $classes }}">{{ $tag->name }}</a>

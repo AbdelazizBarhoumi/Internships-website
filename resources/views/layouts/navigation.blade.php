@@ -23,7 +23,7 @@
                     </x-nav-link>
                      @endcan
 
-                    <x-nav-link :href="route('myinternships')" :active="request()->routeIs('myinternships')">
+                    <x-nav-link :href="route('myInternships')" :active="request()->routeIs('myInternships')">
                         {{ __('My Internships') }}
                     </x-nav-link>
 

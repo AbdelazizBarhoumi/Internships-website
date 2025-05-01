@@ -36,7 +36,6 @@
 .flip-card-back {
   transform: rotateY(180deg); /* Rotates back side to face away initially */
 }
-/* Blur Transition Styles */
 
 /* Blur Transition Styles */
 .card-content {
@@ -64,4 +63,33 @@
 }
 .btn-green {
   @apply bg-green-100 text-green-800;
+}
+/* Line clamp utilities for text truncation */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.line-clamp-6 {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+/* Text expansion transition */
+.expandable-text {
+  transition: max-height 0.5s ease;
+}
+
+/* Text content styles - without prose */
+.content-text {
+  @apply max-w-none border-l-4 border-indigo-100 pl-4 py-1 text-gray-700 whitespace-pre-line;
+}
+
+/* Read more button styles */
+.read-more-btn {
+  @apply mt-2 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center;
 }

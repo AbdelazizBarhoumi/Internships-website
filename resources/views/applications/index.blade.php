@@ -19,8 +19,7 @@
                     <option value="">All Statuses</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending Review</option>
                     <option value="reviewing" {{ request('status') == 'reviewing' ? 'selected' : '' }}>Reviewing</option>
-                    <option value="interviewed" {{ request('status') == 'interviewed' ? 'selected' : '' }}>Interviewed
-                    </option>
+                    <option value="interviewed" {{ request('status') == 'interviewed' ? 'selected' : '' }}>Interviewed</option>
                     <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>Accepted</option>
                     <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                 </select>
@@ -29,7 +28,7 @@
                     <select id="internship-filter"
                         class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <option value="">All Internships</option>
-                        @foreach(Auth::user()->employer->internships as $employerInternship)
+                        @foreach($internships as $employerInternship)
                             <option value="{{ $employerInternship->id }}" {{ request('internship_id') == $employerInternship->id ? 'selected' : '' }}>
                                 {{ $employerInternship->title }}
                             </option>
@@ -57,22 +56,22 @@
 
                 <div class="bg-white rounded-lg shadow-sm p-4 text-center">
                     <p class="text-sm text-gray-500 uppercase tracking-wide">Pending</p>
-                    <p class="text-2xl font-bold text-yellow-500">{{ $pendingCount }}</p>
+                    <p class="text-2xl font-bold text-yellow-500">{{ $pendingCount ?? 0 }}</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm p-4 text-center">
                     <p class="text-sm text-gray-500 uppercase tracking-wide">Reviewing</p>
-                    <p class="text-2xl font-bold text-blue-500">{{ $reviewingCount }}</p>
+                    <p class="text-2xl font-bold text-blue-500">{{ $reviewingCount ?? 0 }}</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm p-4 text-center">
                     <p class="text-sm text-gray-500 uppercase tracking-wide">Interviewed</p>
-                    <p class="text-2xl font-bold text-purple-500">{{ $interviewedCount }}</p>
+                    <p class="text-2xl font-bold text-purple-500">{{ $interviewedCount ?? 0}}</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm p-4 text-center">
                     <p class="text-sm text-gray-500 uppercase tracking-wide">Accepted</p>
-                    <p class="text-2xl font-bold text-green-500">{{ $acceptedCount }}</p>
+                    <p class="text-2xl font-bold text-green-500">{{ $acceptedCount ?? 0}}</p>
                 </div>
             </div>
 

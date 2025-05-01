@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Events\Login;
+use App\Listeners\LogSuccessfulLogin;
 use App\Policies\AdminPolicy;
 
 
@@ -24,6 +25,16 @@ class AppServiceProvider extends ServiceProvider
         // Other policies...
         User::class => AdminPolicy::class,
     ];
+
+    protected $listen = [
+        // ...existing listeners
+        
+        Login::class => [
+            LogSuccessfulLogin::class,
+        ],
+    ];
+
+
     /**
      * Bootstrap any application services.
      */

@@ -13,6 +13,6 @@ Route::middleware(['auth', 'can:employer'])->group(function () {
     Route::get('dashboard/myinternship/{internship}/edit', [InternshipController::class, 'edit'])->name('myinternship.edit');
     Route::patch('dashboard/myinternship/{internship}', [InternshipController::class, 'update'])->name('myinternship.update');
     Route::delete('dashboard/myinternship/{internship}', [InternshipController::class, 'destroy'])->name('myinternship.destroy');
-    Route::get('dashboard/myinternships', [InternshipController::class, 'myInternships'])->name('myinternships');
+    Route::get('dashboard/myInternships', [InternshipController::class, 'myInternships'])->name('myInternships');
 
 });

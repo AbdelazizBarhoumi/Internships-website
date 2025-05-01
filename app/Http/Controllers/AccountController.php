@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AccountAppealSubmitted;
 use App\Mail\AccountAppealNotification;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -27,43 +28,37 @@ class AccountController extends Controller
     /**
      * Process account suspension appeal
      */
-    public function appeal(Request $request)
+
+    public function submitAppeal(Request $request)
     {
-        // Ensure user is logged in and suspended
-        if (!Auth::check() || Auth::user()->is_active) {
-            return redirect()->route('dashboard');
-        }
-        
+        // Validate the request
         $validated = $request->validate([
-            'appeal_reason' => 'required|string|min:20|max:5000',
-            'additional_info' => 'nullable|string|max:2000',
+            'appeal_reason' => 'required|string|min:20',
+            'additional_info' => 'nullable|string',
             'acknowledge' => 'required|accepted',
         ]);
         
-        // Create appeal record
-        $appeal = new AccountAppeal([
-            'user_id' => Auth::id(),
-            'reason' => $validated['appeal_reason'],
-            'additional_info' => $validated['additional_info'],
-            'status' => 'pending', // pending, approved, rejected
-        ]);
+        $user = Auth::user();
         
+        // Store the appeal in database
+        $appeal = new AccountAppeal();
+        $appeal->user_id = $user->id;
+        $appeal->reason = $validated['appeal_reason'];
+        $appeal->additional_info = $validated['additional_info'] ?? null;
+        $appeal->status = 'pending';
         $appeal->save();
+
+
+        // Send email notification to the user
+        Mail::to($user->email)->queue(new AccountAppealSubmitted(
+            $user, 
+            $validated['appeal_reason'],
+            $validated['additional_info'] ?? null
+        ));
+
+        // Also notify admin
+        Mail::to(config('mail.admin_address', 'abdulazeezbrhomi@gmail.com'))->queue(new AccountAppealNotification($user, $appeal));
         
-        // Send email to user confirming appeal submission
-        try {
-            Mail::to(Auth::user()->email)->send(new AccountAppealSubmitted(Auth::user()));
-            
-            // Send notification to admins
-            $admins = \App\Models\User::whereHas('admin')->get();
-            foreach ($admins as $admin) {
-                Mail::to($admin->email)->send(new AccountAppealNotification(Auth::user(), $appeal));
-            }
-        } catch (\Exception $e) {
-            // Log email error but continue
-            \Log::error("Failed to send appeal email: " . $e->getMessage());
-        }
-        
-        return back()->with('success', 'Your appeal has been submitted successfully. We will review it and respond within 1-2 business days.');
+        return back()->with('success', 'Your appeal has been submitted successfully. We will review it within 1-2 business days.');
     }
 }
