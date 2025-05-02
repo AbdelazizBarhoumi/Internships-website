@@ -209,8 +209,8 @@ class AdminController extends Controller
     public function demote(User $user)
     {
         // Authorization check
-        if (!Gate::allows('demote-admins', $user)) {
-            abort(403, 'Unauthorized action.');
+        if (auth()->user()->admin->role !== 'super_admin' && $user->admin->role === 'super_admin') {
+            return back()->with('error', 'You do not have permission to demote a super admin.');
         }
 
         if ($user->admin) {

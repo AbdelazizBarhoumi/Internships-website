@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('role')->default('admin'); // 'admin', 'super_admin', etc.
-            $table->json('permissions')->nullable();
             $table->timestamps();
 
             // Ensure a user can only have one admin record

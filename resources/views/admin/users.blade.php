@@ -264,6 +264,7 @@
                                                 @if (auth()->id() !== $user->id)
                                                     @if ($user->admin)
                                                         <!-- Demote Button -->
+                                                        @if (auth()->user()->admin->role === 'super_admin' || $user->admin->role !== 'super_admin')
                                                         <button @click="openDemote = true" type="button"
                                                             class="text-yellow-600 hover:text-yellow-900 flex items-center">
                                                             <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -344,6 +345,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @endif
                                                     @else
                                                         @if ($user->employer)
                                                             <!-- Promote Button -->

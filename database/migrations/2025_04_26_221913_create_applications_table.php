@@ -14,7 +14,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Internship::class, 'internship_id')->constrained()->cascadeOnDelete();
-            
+            $table->string('profile_photo_path')->nullable()->after('transcript_path');
+
             // Personal Information
             $table->string('phone');
             $table->date('availability');
@@ -39,6 +40,10 @@ return new class extends Migration
                   ->default('pending');
             $table->text('notes')->nullable();
             $table->text('admin_notes')->nullable();
+            
+            $table->softDeletes();
+
+
 
             $table->timestamps();
         });

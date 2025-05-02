@@ -29,6 +29,11 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'is_active' => true, // Default to active users
+            'created_at' => fake()->dateTimeBetween('2024-08-01', 'now'),
+            'updated_at' => function (array $attributes) {
+                return $attributes['created_at'];
+            },
         ];
     }
 
@@ -40,5 +45,30 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Indicate that the user account is inactive.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+    
+    /**
+     * Set a custom date range for user creation
+     */
+    public function createdBetween(string $startDate, string $endDate): static
+    {
+        return $this->state(function (array $attributes) use ($startDate, $endDate) {
+            $createdAt = fake()->dateTimeBetween($startDate, $endDate);
+            
+            return [
+                'created_at' => $createdAt,
+                'updated_at' => $createdAt,
+            ];
+        });
     }
 }

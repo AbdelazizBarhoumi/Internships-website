@@ -24,6 +24,9 @@ return new class extends Migration
             $table->date('deadline_date')->nullable();
             $table->boolean('featured')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('view_count')->default(0)->after('is_active');
+
+    
 
             $table->timestamps();
         });

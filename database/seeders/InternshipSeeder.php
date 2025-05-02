@@ -75,16 +75,16 @@ class InternshipSeeder extends Seeder
         
         // Create some employers if none exist
         $employerCount = Employer::count();
-        if ($employerCount < 10) {
-            $usersWithoutEmployers = User::whereDoesntHave('employer')->take(10 - $employerCount)->get();
+        if ($employerCount < 15) {
+            $usersWithoutEmployers = User::whereDoesntHave('employer')->take(15 - $employerCount)->get();
             
             foreach ($usersWithoutEmployers as $user) {
                 Employer::factory()->create(['user_id' => $user->id]);
             }
             
             // If still not enough employers, create new ones
-            if (Employer::count() < 10) {
-                Employer::factory(10 - Employer::count())->create();
+            if (Employer::count() < 15) {
+                Employer::factory(15 - Employer::count())->withoutLogo()->create();
             }
         }
         
@@ -94,38 +94,108 @@ class InternshipSeeder extends Seeder
         // Create a variety of internships
         $this->command->info('Creating regular internships...');
         
+        // Helper function to randomly apply states to a factory
+        $applyRandomStates = function($factory) {
+            // Randomly apply activity state (90% active by default, but we'll be explicit sometimes)
+            if (rand(0, 150) < 20) {
+                $factory = $factory->inactive();
+            } elseif (rand(0, 150) < 15) {
+                $factory = $factory->active();
+            }
+            
+            // 20% chance of being featured (aligns with factory default)
+            if (rand(0, 150) < 20) {
+                $factory = $factory->featured();
+            }
+            
+            // 15% chance of being urgent
+            if (rand(0, 150) < 15) {
+                $factory = $factory->urgent();
+            }
+            
+            // 15% chance of being popular with high view count
+            if (rand(0, 150) < 15) {
+                $factory = $factory->popular();
+            }
+            
+            // 15% chance of being explicitly remote
+            if (rand(0, 150) < 15) {
+                $factory = $factory->remote();
+            }
+            
+            // 70% chance of being paid, 15% unpaid
+            if (rand(0, 150) < 15) {
+                $factory = $factory->unpaid();
+            } else {
+                $factory = $factory->paid();
+            }
+            
+            return $factory;
+        };
+        
         // Create tech internships (80)
-        Internship::factory(80)
-            ->sequence(fn ($sequence) => ['employer_id' => $employerIds[array_rand($employerIds)]])
-            ->create()
-            ->each(function ($internship) use ($createdProgrammingTags, $createdSoftSkillTags) {
-                // Tech internships get 2-3 programming tags + 1-2 soft skills
-                $internship->tags()->attach(
-                    $createdProgrammingTags->shuffle()->take(rand(2, 3))->pluck('id')->toArray()
-                );
-                $internship->tags()->attach(
-                    $createdSoftSkillTags->shuffle()->take(rand(1, 2))->pluck('id')->toArray()
-                );
-            });
+        $this->command->info('Creating tech internships with random states...');
+        for ($i = 0; $i < 80; $i++) {
+            $factory = Internship::factory()
+                ->state(['employer_id' => $employerIds[array_rand($employerIds)]]);
+            
+            // Apply random states
+            $factory = $applyRandomStates($factory);
+            
+            // Create the internship with applied states
+            $internship = $factory->create();
+            
+            // Attach tags
+            $internship->tags()->attach(
+                $createdProgrammingTags->shuffle()->take(rand(2, 3))->pluck('id')->toArray()
+            );
+            $internship->tags()->attach(
+                $createdSoftSkillTags->shuffle()->take(rand(1, 2))->pluck('id')->toArray()
+            );
+        }
             
         // Create design internships (40)
-        $this->command->info('Creating design internships...');
-        Internship::factory(40)
-            ->sequence(fn ($sequence) => ['employer_id' => $employerIds[array_rand($employerIds)]])
-            ->create()
-            ->each(function ($internship) use ($createdDesignTags, $createdSoftSkillTags) {
-                // Design internships get 2-3 design tags + 1-2 soft skills
-                $internship->tags()->attach(
-                    $createdDesignTags->shuffle()->take(rand(2, 3))->pluck('id')->toArray()
-                );
-                $internship->tags()->attach(
-                    $createdSoftSkillTags->shuffle()->take(rand(1, 2))->pluck('id')->toArray()
-                );
-            });
+        $this->command->info('Creating design internships with random states...');
+        for ($i = 0; $i < 40; $i++) {
+            $factory = Internship::factory()
+                ->state(['employer_id' => $employerIds[array_rand($employerIds)]]);
             
-        // Rest of your seeder remains the same but using the created tag collections
-        // instead of the factory-generated ones
+            // Apply random states
+            $factory = $applyRandomStates($factory);
+            
+            // Create the internship with applied states
+            $internship = $factory->create();
+            
+            // Attach tags
+            $internship->tags()->attach(
+                $createdDesignTags->shuffle()->take(rand(2, 3))->pluck('id')->toArray()
+            );
+            $internship->tags()->attach(
+                $createdSoftSkillTags->shuffle()->take(rand(1, 2))->pluck('id')->toArray()
+            );
+        }
         
-        $this->command->info('Created ' . Internship::count() . ' internships with categorized tags!');
+        // Create business internships (15)
+        $this->command->info('Creating business internships with random states...');
+        for ($i = 0; $i < 15; $i++) {
+            $factory = Internship::factory()
+                ->state(['employer_id' => $employerIds[array_rand($employerIds)]]);
+            
+            // Apply random states
+            $factory = $applyRandomStates($factory);
+            
+            // Create the internship with applied states
+            $internship = $factory->create();
+            
+            // Attach tags
+            $internship->tags()->attach(
+                $createdBusinessTags->shuffle()->take(rand(2, 3))->pluck('id')->toArray()
+            );
+            $internship->tags()->attach(
+                $createdSoftSkillTags->shuffle()->take(rand(1, 2))->pluck('id')->toArray()
+            );
+        }
+        
+        $this->command->info('Created ' . Internship::count() . ' internships with categorized tags and random states!');
     }
 }
