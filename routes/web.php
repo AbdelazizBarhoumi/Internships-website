@@ -14,16 +14,9 @@ Route::get('/tags/{tagName}', TagController::class)->name('tags.show');
 // Authentication required routes
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        if (Auth::user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        } elseif (Auth::user()->isEmployer()) {
-            return redirect()->route('employer.dashboard');
-        } else {
-            // For student/default dashboard
-            return view('dashboard');
-        }
-    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 });
 
 // Add these routes to your routes file
@@ -54,12 +47,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Application management
     Route::get('/applications', [AdminController::class, 'applications'])->name('admin.applications');
     Route::get('/applications/{application}', [AdminController::class, 'showApplication'])->name('admin.applications.show');
-    Route::post('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])->name('admin.applications.update-status');
-
-    // System settings
-    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
-    Route::post('/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
-
+    Route::post('/applications/{application}/note', [AdminController::class, 'UpdateNotes'])->name('admin.applications.update-notes');
+    Route::delete('/applications/{application}/destroy', [AdminController::class, 'deleteApplication'])->name('admin.applications.destroy');
+    
     // Add this route
     Route::get('/account/suspended', [App\Http\Controllers\AccountController::class, 'suspended'])
         ->name('account.suspended');
@@ -78,8 +68,12 @@ Route::post('/account/appeal', [App\Http\Controllers\AccountController::class, '
 Route::middleware(['auth', 'can:employer'])->group(function () {
     Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
     Route::post('/internships/{internship}/toggle-status', [EmployerController::class, 'toggleInternshipStatus'])->name('myinternship.active');
-
 });
+
+// Admin toggle internship status route
+Route::post('/admin/internships/{internship}/toggle-status', [AdminController::class, 'toggleInternshipStatus'])->name('admin.internships.toggle-status');
+
+
 
 Route::fallback(function() {
     abort(404);

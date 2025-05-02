@@ -11,23 +11,23 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-semibold mb-4">System Statistics</h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                         <div class="bg-blue-100 p-4 rounded-lg shadow">
                             <div class="text-3xl font-bold">{{ $stats['users'] }}</div>
                             <div class="text-sm text-gray-600">Total Users</div>
                         </div>
-                        
+
                         <div class="bg-green-100 p-4 rounded-lg shadow">
                             <div class="text-3xl font-bold">{{ $stats['employers'] }}</div>
                             <div class="text-sm text-gray-600">Employers</div>
                         </div>
-                        
+
                         <div class="bg-yellow-100 p-4 rounded-lg shadow">
                             <div class="text-3xl font-bold">{{ $stats['internships'] }}</div>
                             <div class="text-sm text-gray-600">Internships</div>
                         </div>
-                        
+
                         <div class="bg-purple-100 p-4 rounded-lg shadow">
                             <div class="text-3xl font-bold">{{ $stats['applications'] }}</div>
                             <div class="text-sm text-gray-600">Applications</div>
@@ -40,71 +40,54 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
-                    
-                    <div class="flex flex-wrap gap-4">
-                        <a href="{{ route('admin.users') }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            <i class="fas fa-users mr-2"></i> Manage Users
-                        </a>
-                        <a href="{{ route('admin.internships') }}" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                            <i class="fas fa-briefcase mr-2"></i> Manage Internships
-                        </a>
-                        <a href="{{ route('admin.applications') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                            <i class="fas fa-file-alt mr-2"></i> Manage Applications
-                        </a>
-                        <a href="{{ route('admin.settings') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                            <i class="fas fa-cog mr-2"></i> System Settings
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
             <!-- Recent Activity -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Recent Internships -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col min-h-[200px]">
                     <div class="p-6 text-gray-900">
                         <h3 class="text-lg font-semibold mb-4">Recent Internships</h3>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
+                            <table class="min-w-full bg-white ">
                                 <thead class="bg-gray-100">
                                     <tr>
                                         <th class="py-2 px-4 border-b text-left">Title</th>
                                         <th class="py-2 px-4 border-b text-left">Employer</th>
-                                        <th class="py-2 px-4 border-b text-left">Date</th>
+                                        <th class="py-2 px-4 border-b text-center">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($recentInternships as $internship)
                                         <tr>
                                             <td class="py-2 px-4 border-b">
-                                                <a href="{{ route('admin.internships.show', $internship) }}" class="text-blue-600 hover:underline">
+                                                <a href="{{ route('admin.internships.show', $internship) }}"
+                                                    class="text-blue-600 hover:underline">
                                                     {{ Str::limit($internship->title, 30) }}
                                                 </a>
                                             </td>
-                                            <td class="py-2 px-4 border-b">{{ $internship->employer->name }}</td>
-                                            <td class="py-2 px-4 border-b">{{ $internship->created_at->format('M d, Y') }}</td>
+                                            <td class="py-2 px-4 border-b text-sm">
+                                                {{ $internship->employer->employer_name }}</td>
+                                            <td class="py-2 px-4 border-b text-center text-sm whitespace-nowrap">
+                                                {{ $internship->created_at->format('M d, Y') }}
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3" class="py-2 px-4 border-b text-center">No recent internships</td>
+                                            <td colspan="3" class="py-2 px-4 border-b text-center">No recent internships
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-4">
-                            <a href="{{ route('admin.internships') }}" class="text-blue-600 hover:underline">View all internships →</a>
-                        </div>
+                    </div>
+                    <div class="p-6 mt-auto">
+                        <a href="{{ route('admin.internships') }}" class="text-blue-600 hover:underline">View all
+                            internships →</a>
                     </div>
                 </div>
-                
+
                 <!-- Recent Applications -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col min-h-[200px]">
                     <div class="p-6 text-gray-900">
                         <h3 class="text-lg font-semibold mb-4">Recent Applications</h3>
                         <div class="overflow-x-auto">
@@ -112,44 +95,48 @@
                                 <thead class="bg-gray-100">
                                     <tr>
                                         <th class="py-2 px-4 border-b text-left">User</th>
-                                        <th class="py-2 px-4 border-b text-left">Internship</th>
-                                        <th class="py-2 px-4 border-b text-left">Status</th>
+                                        <th class="py-2 px-4 border-b text-center">Internship</th>
+                                        <th class="py-2 px-4 border-b text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($recentApplications as $application)
                                         <tr>
                                             <td class="py-2 px-4 border-b">{{ $application->user->name }}</td>
-                                            <td class="py-2 px-4 border-b">
-                                                <a href="{{ route('admin.internships.show', $application->internship) }}" class="text-blue-600 hover:underline">
+                                            <td class="py-2 px-4 border-b text-center">
+                                                <a href="{{ route('admin.internships.show', $application->internship) }}"
+                                                    class="text-blue-600 hover:underline">
                                                     {{ Str::limit($application->internship->title, 30) }}
                                                 </a>
                                             </td>
-                                            <td class="py-2 px-4 border-b">
-                                                <span class="px-2 py-1 rounded text-xs
-                                                    {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                    {{ $application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' : '' }}
-                                                    {{ $application->status === 'accepted' ? 'bg-green-100 text-green-800' : '' }}
-                                                    {{ $application->status === 'rejected' ? 'bg-red-100 text-red-800' : '' }}">
+                                            <td class="py-2 px-4 border-b text-center">
+                                                <span
+                                                    class="px-2 py-1 rounded text-xs 
+                                                {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                                {{ $application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' : '' }}
+                                                {{ $application->status === 'accepted' ? 'bg-green-100 text-green-800' : '' }}
+                                                {{ $application->status === 'rejected' ? 'bg-red-100 text-red-800' : '' }}">
                                                     {{ ucfirst($application->status) }}
                                                 </span>
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3" class="py-2 px-4 border-b text-center">No recent applications</td>
+                                            <td colspan="3" class="py-2 px-4 border-b text-center">No recent applications
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-4">
-                            <a href="{{ route('admin.applications') }}" class="text-blue-600 hover:underline">View all applications →</a>
-                        </div>
+                    </div>
+                    <div class="p-6 mt-auto">
+                        <a href="{{ route('admin.applications') }}" class="text-blue-600 hover:underline">View all
+                            applications →</a>
                     </div>
                 </div>
             </div>
-            
+
             <!-- New Users Section -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
@@ -159,19 +146,20 @@
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="py-2 px-4 border-b text-left">Name</th>
-                                    <th class="py-2 px-4 border-b text-left">Email</th>
-                                    <th class="py-2 px-4 border-b text-left">Joined</th>
-                                    <th class="py-2 px-4 border-b text-left">Action</th>
+                                    <th class="py-2 px-4 border-b text-center">Email</th>
+                                    <th class="py-2 px-4 border-b text-center">Joined</th>
+                                    <th class="py-2 px-4 border-b text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($recentUsers as $user)
                                     <tr>
                                         <td class="py-2 px-4 border-b">{{ $user->name }}</td>
-                                        <td class="py-2 px-4 border-b">{{ $user->email }}</td>
-                                        <td class="py-2 px-4 border-b">{{ $user->created_at->diffForHumans() }}</td>
-                                        <td class="py-2 px-4 border-b">
-                                            <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:underline">View Profile</a>
+                                        <td class="py-2 px-4 border-b text-center">{{ $user->email }}</td>
+                                        <td class="py-2 px-4 border-b text-center">{{ $user->created_at->diffForHumans() }}</td>
+                                        <td class="py-2 px-4 border-b text-center">
+                                            <a href="{{ route('admin.users.show', $user) }}"
+                                                class="text-blue-600 hover:underline">View Profile</a>
                                         </td>
                                     </tr>
                                 @empty
@@ -187,12 +175,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Monthly Stats Charts -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-semibold mb-4">Monthly Activity</h3>
-                    
+
                     <div class="h-80">
                         <canvas id="monthlyChart"></canvas>
                     </div>
@@ -203,31 +191,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('monthlyChart').getContext('2d');
-            
+
             // Prepare data from PHP variables
             const monthlyStats = @json($monthlyStats);
-            
+
             // Prepare labels (months)
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            
+
             // Format data for Chart.js
             const userData = months.map((_, index) => {
                 const monthNum = (index + 1).toString().padStart(2, '0');
                 return monthlyStats.users[monthNum] || 0;
             });
-            
+
             const internshipData = months.map((_, index) => {
                 const monthNum = (index + 1).toString().padStart(2, '0');
                 return monthlyStats.internships[monthNum] || 0;
             });
-            
+
             const applicationData = months.map((_, index) => {
                 const monthNum = (index + 1).toString().padStart(2, '0');
                 return monthlyStats.applications[monthNum] || 0;
             });
-            
+
             // Create chart
             const myChart = new Chart(ctx, {
                 type: 'line',
@@ -279,5 +267,5 @@
             });
         });
     </script>
-    
+
 </x-app-layout>

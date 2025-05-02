@@ -14,25 +14,38 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 
                      @can('access-admin')
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Admin Dashboard') }}
+                     
+                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                         {{ __('Admin Dashboard') }}
+                     </x-nav-link>
+
+                    <x-nav-link :href="route('admin.users')" :active="request()->routeIs('*admin.users*')">
+                        {{ __('Manage Users') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.internships')" :active="request()->routeIs('*admin.internships*')">
+                        {{ __('Manage Internships') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.applications')" :active="request()->routeIs('*admin.applications*')">
+                        {{ __('Manage Applications') }}
                     </x-nav-link>
                     @else
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard*')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('applications.my.index')" :active="request()->routeIs('*applications*')">
+                       {{ __('All Applicants') }}
+                   </x-nav-link>
+                   
                      @endcan
+                     
                     @can('employer')
 
                     <x-nav-link :href="route('myInternships')" :active="request()->routeIs('myInternships')">
                         {{ __('My Internships') }}
                     </x-nav-link>
-                   
-                    @else
-                     <x-nav-link :href="route('applications.my.index')" :active="request()->routeIs('*applications*')">
-                        {{ __('All Applicants') }}
-                    </x-nav-link>
-                        @endcan
+
+                                           @endcan
 
                    
                     

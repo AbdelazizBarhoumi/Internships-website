@@ -38,7 +38,9 @@ class AdminController extends Controller
         // Basic stats
         $stats = [
             'users' => User::count(),
-            'employers' => Employer::count(),
+            'employers' => Employer::whereHas('user', function($q) {
+                $q->whereDoesntHave('admin');
+            })->count(),
             'internships' => Internship::count(),
             'applications' => Application::count(),
             'admin_count' => Admin::count(),
@@ -95,7 +97,8 @@ class AdminController extends Controller
                     $query->whereHas('admin');
                     break;
                 case 'employers':
-                    $query->whereHas('employer');
+                    $query->whereHas('employer')
+                    ->whereDoesntHave('admin'); // Only show employers who aren't admins
                     break;
                 case 'regular':
                     $query->whereDoesntHave('admin')->whereDoesntHave('employer');
@@ -133,11 +136,16 @@ class AdminController extends Controller
         $userData = [];
 
         if ($user->employer) {
+
             $userData['internships'] = Internship::where('employer_id', $user->employer->id)
                 ->withCount('applications')
                 ->get();
+                $userData['totalApplicants'] = Application::whereHas('internship', function($query) use ($user) {
+                    $query->where('employer_id', $user->employer->id);
+                  })
+                  ->count();
         } else {
-            $userData['applications'] = Application::where('user_id', $user->id)
+            $userData['applications'] = Application::where('application_id', $user->id)
                 ->with('internship')
                 ->get();
         }
@@ -166,29 +174,13 @@ class AdminController extends Controller
         DB::beginTransaction();
 
         try {
-            // If user is an employer, remove employer record
-            if ($user->employer) {
-                // Log the employer data being removed
-                Log::info('Removing employer data during admin promotion', [
-                    'user_id' => $user->id,
-                    'employer_id' => $user->employer->id,
+                $user->is_active = false;
+                $user->save();
+                
+                Log::info('Setting regular user inactive during admin promotion', [
+                    'user_id' => $user->id
                 ]);
-
-                $user->employer->delete();
-            }
-
-            // Delete user's applications if any
-            $applicationCount = Application::where('user_id', $user->id)->count();
-
-            if ($applicationCount > 0) {
-                // Log the applications being deleted
-                Log::info('Removing user applications during admin promotion', [
-                    'user_id' => $user->id,
-                    'application_count' => $applicationCount,
-                ]);
-
-                Application::where('user_id', $user->id)->delete();
-            }
+            
 
             // Create admin record
             Admin::create([
@@ -197,8 +189,8 @@ class AdminController extends Controller
             ]);
 
             DB::commit();
-
-            return back()->with('success', "User promoted to admin successfully. Removed {$applicationCount} application(s).");
+            
+            return back()->with('success', 'User promoted to admin successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -223,6 +215,12 @@ class AdminController extends Controller
 
         if ($user->admin) {
             $user->admin->delete();
+            $user->is_active = true; // Reactivate user
+            $user->save();
+            Log::info('User demoted from admin', [
+                'user_id' => $user->id
+            ]);
+
             return back()->with('success', 'Admin privileges removed successfully.');
         }
 
@@ -267,6 +265,9 @@ class AdminController extends Controller
                 $query->where('is_active', true);
             } elseif ($request->status === 'inactive') {
                 $query->where('is_active', false);
+            }
+            if ($request->has('employer_id') && !empty($request->employer_id)) {
+                $query->where('employer_id', $request->employer_id);
             }
         }
 
@@ -335,6 +336,16 @@ class AdminController extends Controller
         return redirect()->route('admin.internships')
             ->with('success', "Internship '{$title}' has been deleted.");
     }
+    public function deleteApplication(Application $application)
+    {
+        if (!Gate::allows('access-admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $application->delete();
+
+        return redirect()->route('admin.applications')
+            ->with('success', 'Application has been deleted successfully.');
+    }
 
     /**
      * Display all applications
@@ -348,20 +359,50 @@ class AdminController extends Controller
         $query = Application::with(['user', 'internship.employer']);
 
         // Filter by status if provided
-        if ($request->has('status') && !empty($request->status)) {
+        if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
-
-        // Search functionality
-        if ($request->has('search')) {
+        
+        // Filter by internship_id
+        if ($request->has('internship_id') && $request->internship_id != '') {
+            $query->where('internship_id', $request->internship_id);
+        }
+        
+        // Filter by employer_id (through the internship relationship)
+        if ($request->has('employer_id') && $request->employer_id != '') {
+            $query->whereHas('internship', function($q) use ($request) {
+                $q->where('employer_id', $request->employer_id);
+            });
+        }
+        
+        // Filter by date range
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+        
+        // Filter by search term
+        if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('user', function ($uq) use ($searchTerm) {
-                    $uq->where('name', 'like', "%{$searchTerm}%")
-                        ->orWhere('email', 'like', "%{$searchTerm}%");
-                })->orWhereHas('internship', function ($iq) use ($searchTerm) {
-                    $iq->where('title', 'like', "%{$searchTerm}%");
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereHas('user', function($query) use ($searchTerm) {
+                    $query->where('name', 'like', "%{$searchTerm}%")
+                          ->orWhere('email', 'like', "%{$searchTerm}%");
+                })
+                ->orWhereHas('internship', function($query) use ($searchTerm) {
+                    $query->where('title', 'like', "%{$searchTerm}%")
+                          ->orWhere('description', 'like', "%{$searchTerm}%");
                 });
+                
+                // Only search in student skills if the relationship exists
+                if (method_exists($q->getModel()->user->getRelated(), 'student')) {
+                    $q->orWhereHas('user.student', function($query) use ($searchTerm) {
+                        $query->where('skills', 'like', "%{$searchTerm}%");
+                    });
+                }
             });
         }
 
@@ -389,7 +430,7 @@ class AdminController extends Controller
     /**
      * Update application status
      */
-    public function updateApplicationStatus(Request $request, Application $application)
+    public function UpdateNotes(Request $request, Application $application)
     {
         if (!Gate::allows('access-admin')) {
             abort(403, 'Unauthorized action.');
@@ -408,141 +449,4 @@ class AdminController extends Controller
 
         return back()->with('success', 'Application Notes updated successfully.');
     }
-
-    /**
-     * Show system settings
-     */
-    public function settings()
-    {
-        if (!Gate::allows('access-admin')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Get settings from database
-        $settingsData = DB::table('settings')->get();
-
-        $settings = [];
-        foreach ($settingsData as $setting) {
-            $settings[$setting->key] = json_decode($setting->value, true);
-        }
-
-        // Add any missing settings with defaults
-        $defaultSettings = [
-            'site_name' => config('app.name'),
-            'registration_open' => true,
-            'employer_approval_required' => true,
-            'max_internships_per_employer' => 10,
-            'max_applications_per_user' => 5,
-        ];
-
-        foreach ($defaultSettings as $key => $value) {
-            if (!array_key_exists($key, $settings)) {
-                $settings[$key] = $value;
-            }
-        }
-
-        return view('admin.settings', compact('settings'));
-    }
-
-    /**
-     * Update system settings
-     */
-    public function updateSettings(Request $request)
-    {
-        if (!Gate::allows('access-admin')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $validated = $request->validate([
-            'site_name' => 'required|string|max:255',
-            'registration_open' => 'boolean',
-            'employer_approval_required' => 'boolean',
-            'max_internships_per_employer' => 'integer|min:1|max:100',
-            'max_applications_per_user' => 'integer|min:1|max:20',
-        ]);
-
-        // Handle checkbox fields that aren't submitted when unchecked
-        if (!isset($validated['registration_open'])) {
-            $validated['registration_open'] = false;
-        }
-
-        if (!isset($validated['employer_approval_required'])) {
-            $validated['employer_approval_required'] = false;
-        }
-
-        // Save to database
-        foreach ($validated as $key => $value) {
-            DB::table('settings')->updateOrInsert(
-                ['key' => $key],
-                ['value' => json_encode($value), 'updated_at' => now()]
-            );
-        }
-
-        // Update app name in config for current request
-        config(['app.name' => $validated['site_name']]);
-
-        return back()->with('success', 'Settings updated successfully.');
-    }
-
-    /**
-     * Clear various application caches
-     */
-    public function clearCache($type)
-    {
-        if (!Gate::allows('access-admin')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        switch ($type) {
-            case 'app':
-                Artisan::call('cache:clear');
-                $message = 'Application cache cleared successfully.';
-                break;
-            case 'view':
-                Artisan::call('view:clear');
-                $message = 'View cache cleared successfully.';
-                break;
-            case 'route':
-                Artisan::call('route:clear');
-                $message = 'Route cache cleared successfully.';
-                break;
-            case 'config':
-                Artisan::call('config:clear');
-                $message = 'Configuration cache cleared successfully.';
-                break;
-            default:
-                return back()->with('error', 'Invalid cache type specified.');
-        }
-
-        return back()->with('success', $message);
-    }
-
-    /**
-     * Export database backup
-     */
-    public function exportDatabase()
-    {
-        if (!Gate::allows('access-admin')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // This is a simplified example, in production you'd want to use a proper
-        // database backup library or package
-
-        $filename = 'backup-' . date('Y-m-d-His') . '.sql';
-
-        // Use mysqldump command for MySQL
-        $command = sprintf(
-            'mysqldump --user=%s --password=%s %s > %s',
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.database'),
-            storage_path('app/' . $filename)
-        );
-
-        exec($command);
-
-        return response()->download(storage_path('app/' . $filename))->deleteFileAfterSend();
-    }
-
 }

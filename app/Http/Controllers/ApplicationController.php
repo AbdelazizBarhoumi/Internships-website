@@ -77,7 +77,7 @@ class ApplicationController extends Controller
         // Build the query with filters and sorting
         $query = Application::query()
             ->with(['internship', 'internship.employer'])
-            ->where('user_id', Auth::id());
+            ->where('applications.user_id', Auth::id());
         
         $this->applyStudentApplicationFilters($query, $request);
         
@@ -531,7 +531,7 @@ public function destroy(Application $application)
     {
         // Apply status filter
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('applications.status', $request->status);
         }
         
         // Apply search if provided
@@ -549,28 +549,30 @@ public function destroy(Application $application)
         if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'date_asc':
-                    $query->oldest();
+                    $query->oldest('applications.created_at');
                     break;
                 case 'company_asc':
                     $query->join('internships', 'applications.internship_id', '=', 'internships.id')
                           ->join('employers', 'internships.employer_id', '=', 'employers.id')
                           ->orderBy('employers.employer_name', 'asc')
-                          ->select('applications.*');
+                          ->select('applications.*')
+                          ->where('applications.user_id', Auth::id());
                     break;
                 case 'company_desc':
                     $query->join('internships', 'applications.internship_id', '=', 'internships.id')
                           ->join('employers', 'internships.employer_id', '=', 'employers.id')
                           ->orderBy('employers.employer_name', 'desc')
-                          ->select('applications.*');
+                          ->select('applications.*')
+                          ->where('applications.user_id', Auth::id());
                     break;
                 case 'date_desc':
                 default:
-                    $query->latest();
+                    $query->latest('applications.created_at');
                     break;
             }
         } else {
             // Default sorting
-            $query->latest();
+            $query->latest('applications.created_at');
         }
     }
 

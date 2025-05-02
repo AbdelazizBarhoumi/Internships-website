@@ -25,7 +25,7 @@
                 <!-- Logo (absolutely positioned to the left) -->
                 <div class="absolute left-0">
                     <a href="/" class="flex items-center">
-                        <img src="{{ Vite::asset('resources/images/logo.svg') }}" alt="InternNexus" class="h-8 w-auto">
+                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
                 <!-- Desktop Navigation (centered) -->
@@ -43,7 +43,7 @@
                 </div>
                 <!-- Auth Navigation -->
                 <div class="absolute right-0 flex items-center">
-                @if (Route::has('login'))
+                    @if (Route::has('login'))
                         <div class="flex items-center space-x-4">
                             @auth
                                 <div x-data="{ open: false }" class="relative">
@@ -142,34 +142,33 @@
             {{ $slot }}
         </div>
     </main>
-@if ($showHero)
-    <!-- Newsletter Section -->
-    <section class="bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="text-center">
-                <h2 class="text-2xl font-bold text-gray-900">Get the Latest Internship Opportunities</h2>
-                <p class="mt-3 max-w-2xl mx-auto text-gray-600">
-                    Join our newsletter and be the first to know about new internships matching your preferences.
-                </p>
+    @if ($showHero)
+        <!-- Newsletter Section -->
+        <section class="bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-900">Get the Latest Internship Opportunities</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-gray-600">
+                        Join our newsletter and be the first to know about new internships matching your preferences.
+                    </p>
 
 
 
-                <form class="sm:flex pt-5">
-                                <div class="flex-1 min-w-0">
-                                <label for="email" class="sr-only">Email address</label>
-                                    <input id="email" type="email" name="email"
-                                        placeholder="Enter your email"
-                                        class="block w-full px-4 py-3 rounded-l-md border border-gray-300 shadow-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div class="mt-3 sm:mt-0 sm:ml-3">
-                                    <button type="submit"
-                                        class="block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-r-md text-white font-medium focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        Subscribe
-                                    </button>
-                                </div>
-                            </form>
-                            @endif
-               
+                    <form class="sm:flex pt-5">
+                        <div class="flex-1 min-w-0">
+                            <label for="email" class="sr-only">Email address</label>
+                            <input id="email" type="email" name="email" placeholder="Enter your email"
+                                class="block w-full px-4 py-3 rounded-l-md border border-gray-300 shadow-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div class="mt-3 sm:mt-0 sm:ml-3">
+                            <button type="submit"
+                                class="block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-r-md text-white font-medium focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Subscribe
+                            </button>
+                        </div>
+                    </form>
+    @endif
+
             </div>
         </div>
     </section>

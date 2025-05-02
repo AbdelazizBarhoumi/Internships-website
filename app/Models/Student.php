@@ -65,4 +65,76 @@ class Student extends Model
         
         return array_map('trim', explode(',', $this->skills));
     }
+/**
+ * Count all applications for this student
+ * 
+ * @return int
+ */
+public function countApplications()
+{
+    dd($this->applications());
+    return $this->applications()->count();
+}
+
+/**
+ * Count applications with a specific status
+ * 
+ * @param string $status The application status to count
+ * @return int
+ */
+public function countApplicationsByStatus($status)
+{
+    return $this->applications()->where('status', $status)->count();
+}
+
+/**
+ * Get pending applications count
+ * 
+ * @return int
+ */
+public function getPendingApplicationsCountAttribute()
+{
+    return $this->countApplicationsByStatus('pending');
+}
+
+/**
+ * Get reviewing applications count
+ * 
+ * @return int
+ */
+public function getReviewingApplicationsCountAttribute()
+{
+    return $this->countApplicationsByStatus('reviewing');
+}
+
+/**
+ * Get interviewed applications count
+ * 
+ * @return int
+ */
+public function getInterviewedApplicationsCountAttribute()
+{
+    return $this->countApplicationsByStatus('interviewed');
+}
+
+/**
+ * Get accepted applications count
+ * 
+ * @return int
+ */
+public function getAcceptedApplicationsCountAttribute()
+{
+    return $this->countApplicationsByStatus('accepted');
+}
+
+/**
+ * Get rejected applications count
+ * 
+ * @return int
+ */
+public function getRejectedApplicationsCountAttribute()
+{
+    return $this->countApplicationsByStatus('rejected');
+}
+
 }

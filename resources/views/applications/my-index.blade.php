@@ -76,7 +76,7 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm font-medium text-gray-600">Reviewing</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ $reviewingCount }}</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{ $reviewingCount + $interviewedCount }}</p>
                             </div>
                         </div>
                     </div>
