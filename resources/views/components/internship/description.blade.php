@@ -1,7 +1,10 @@
 @props(['internship'])
-<div class="mb-6 border-t pt-4">
-    <h2 class="text-xl font-semibold mb-2 ">Description</h2>
-    <div class="prose max-w-none text-gray-700 break-words whitespace-pre-wrap pr-4 pl-4">
-        {!! nl2br(e($internship->description)) ?? 'No description provided.' !!}
-    </div>
+<div class="prose max-w-none">
+    {!! nl2br(e($internship->description)) !!}
+    
+    @if($internship->duration)
+        <div class="mt-4">
+            <p class="font-medium">Duration: <span class="font-normal">{{ $internship->duration }}</span></p>
+        </div>
+    @endif
 </div>

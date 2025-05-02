@@ -128,7 +128,7 @@
                                             @unless(isset($internship))
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="text-sm text-gray-900">
-                                                    <strong><a href="{{ route('myinternship.show', $application->internship) }}" class="text-indigo-600 hover:text-indigo-900">{{ $application->internship->title }}</a></strong></div>
+                                                    <strong><a href="{{ route('internship.show', $application->internship) }}" class="text-indigo-600 hover:text-indigo-900">{{ $application->internship->title }}</a></strong></div>
                                                 </td>
                                             @endunless
 
@@ -136,8 +136,6 @@
                                                 <div class="text-sm text-gray-900">
                                                     @if($application->institution)
                                                         {{ $application->institution }}
-                                                    @elseif($application->user->applicantProfile?->institution)
-                                                        {{ $application->user->applicantProfile->institution }}
                                                     @else
                                                         Not specified
                                                     @endif

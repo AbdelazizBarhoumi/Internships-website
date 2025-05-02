@@ -36,13 +36,6 @@ require __DIR__ . '/profile.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/internship.php';
 
-// ...existing routes...
-
-// Admin Routes
-// ...existing routes...
-
-// Admin Routes (using policy/gate authorization instead of middleware)
-// Admin Routes (expanded)
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
@@ -56,8 +49,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Internship management
     Route::get('/internships', [AdminController::class, 'internships'])->name('admin.internships');
     Route::get('/internships/{internship}', [AdminController::class, 'showInternship'])->name('admin.internships.show');
-    Route::post('/internships/{internship}/toggle-status', [AdminController::class, 'toggleInternshipStatus'])->name('admin.internships.toggle-status');
-    Route::delete('/internships/{internship}', [AdminController::class, 'deleteInternship'])->name('admin.internships.delete');
+   Route::delete('/internships/{internship}', [AdminController::class, 'deleteInternship'])->name('admin.internships.delete');
 
     // Application management
     Route::get('/applications', [AdminController::class, 'applications'])->name('admin.applications');
@@ -85,5 +77,17 @@ Route::post('/account/appeal', [App\Http\Controllers\AccountController::class, '
 
 Route::middleware(['auth', 'can:employer'])->group(function () {
     Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
-    Route::get('/employer/internships', [EmployerController::class, 'internships'])->name('employer.internships');
+    Route::post('/internships/{internship}/toggle-status', [EmployerController::class, 'toggleInternshipStatus'])->name('myinternship.active');
+
+});
+
+Route::fallback(function() {
+    abort(404);
+});
+
+
+//test route
+
+Route::get('/test', function () {
+    return view('test');
 });

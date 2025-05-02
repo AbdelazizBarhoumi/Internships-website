@@ -35,9 +35,6 @@ class Application extends Model
         'notes',
         'admin_notes',
         'interview_date',
-        'interview_location',
-        'interview_details',
-        'interview_notes',
         'response_date',
     ];
 

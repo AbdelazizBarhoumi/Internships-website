@@ -89,12 +89,6 @@
                                                 <div class="flex space-x-2">
                                                     <a href="{{ route('admin.internships.show', $internship) }}" class="text-blue-600 hover:underline">View</a>
                                                     
-                                                    <form action="{{ route('admin.internships.toggle-status', $internship) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        <button type="submit" class="text-yellow-600 hover:underline ml-2">
-                                                            {{ $internship->is_active ? 'Deactivate' : 'Activate' }}
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>

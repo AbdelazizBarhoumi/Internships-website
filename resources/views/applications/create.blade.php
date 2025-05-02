@@ -5,9 +5,6 @@
                 Apply for {{ $internship->title }}
             </h2>
             <div class="flex gap-2">
-                <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                    {{ $internship->type }}
-                </span>
                 @if($internship->deadline_date)
                     <span class="text-sm {{ \Carbon\Carbon::parse($internship->deadline_date)->isPast() ? 'bg-red-100 text-red-800' : (\Carbon\Carbon::parse($internship->deadline_date)->diffInDays(now()) < 3 ? 'bg-yellow-100 text-yellow-800' : 'bg-amber-100 text-amber-800') }} px-3 py-1 rounded-full">
                         Deadline: {{ \Carbon\Carbon::parse($internship->deadline_date)->format('M j, Y') }}
@@ -59,11 +56,6 @@
                                 <h3 class="text-lg font-bold text-gray-900">{{ $internship->title }}</h3>
                                 <p class="text-gray-600">{{ $internship->employer->company_name }} · {{ $internship->location }}</p>
                                 <div class="mt-2 flex flex-wrap gap-2">
-                                    @if($internship->compensation_type)
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                            {{ $internship->compensation_type }}
-                                        </span>
-                                    @endif
                                     <span class="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">
                                         {{ $internship->duration ?? 'Duration not specified' }}
                                     </span>

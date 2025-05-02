@@ -396,11 +396,9 @@ class AdminController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => 'required|in:pending,reviewing,accepted,rejected',
             'admin_notes' => 'nullable|string|max:1000',
         ]);
 
-        $application->status = $validated['status'];
 
         if (isset($validated['admin_notes'])) {
             $application->admin_notes = $validated['admin_notes'];
@@ -408,7 +406,7 @@ class AdminController extends Controller
 
         $application->save();
 
-        return back()->with('success', 'Application status updated successfully.');
+        return back()->with('success', 'Application Notes updated successfully.');
     }
 
     /**

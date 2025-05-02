@@ -68,4 +68,21 @@ class EmployerController extends Controller
             'acceptedApplications'
         ));
     }
+    public function toggleInternshipStatus(Internship $internship)
+    {
+        // Check if the authenticated user is the employer of the internship
+        $user = Auth::user();
+               
+        $isEmployerOwner = $internship->employer_id === $user->employer->id;
+        if (!$isEmployerOwner) {
+            abort(403, 'Unauthorized action. You do not own this internship.');
+        }
+
+        $internship->is_active = !$internship->is_active;
+        $internship->save();
+
+        $status = $internship->is_active ? 'activated' : 'deactivated';
+
+        return back()->with('success', "Internship has been {$status}.");
+    }
 }

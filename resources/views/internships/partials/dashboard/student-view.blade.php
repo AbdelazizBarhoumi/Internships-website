@@ -370,98 +370,24 @@
 <!-- Recommended Internships -->
 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
     <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recommended For You</h3>
+        <x-section-heading>Recommended For You</x-section-heading>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid lg:grid-cols-3 gap-8 mt-6">
             @php
                 // Get featured internships from active employers only
                 $featuredInternships = \App\Models\Internship::whereHas('employer.user', function ($query) {
                     $query->where('is_active', true);
                 })
                     ->where('featured', true)
+                    ->where('is_active', true)
                     ->latest()
-                    ->take(6)
-                    ->get();
+                    ->paginate(6);
             @endphp
 
             @forelse($featuredInternships as $internship)
-                <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow group">
-                    <div class="p-4">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 mt-1">
-                                @if($internship->employer->employer_logo)
-                                    <img src="{{ Storage::url($internship->employer->employer_logo) }}"
-                                        alt="{{ $internship->employer->employer_name }}"
-                                        class="h-10 w-10 rounded object-contain border p-1">
-                                @else
-                                    <div class="h-10 w-10 bg-gray-200 flex items-center justify-center rounded text-gray-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="ml-3 flex-1">
-                                <h4
-                                    class="font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-150 mb-1">
-                                    {{ $internship->title }}
-                                </h4>
-                                <p class="text-gray-500 text-sm">{{ $internship->employer->employer_name }}</p>
-                                <p class="text-gray-500 text-sm flex items-center mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    {{ $internship->location }}
-                                </p>
-                            </div>
-                        </div>
-
-                        @if($internship->tags->count() > 0)
-                            <div class="flex flex-wrap gap-1 mt-3">
-                                @foreach($internship->randomTags(2) as $tag)
-                                    <x-tag :tag="$tag" size="small" />
-                                @endforeach
-                                @if($internship->tags->count() > 2)
-                                    <span
-                                        class="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        +{{ $internship->tags->count() - 2 }}
-                                    </span>
-                                @endif
-                            </div>
-                        @endif
-
-                        <div class="mt-3 pt-3 border-t flex items-center justify-between">
-                            <span class="inline-flex items-center text-xs text-gray-500">
-                                @if($internship->deadline_date)
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    {{ $internship->deadline_date->diffForHumans() }}
-                                @endif
-                            </span>
-
-                            <a href="{{ route('internship.show', $internship) }}"
-                                class="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-500">
-                                View Details
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <x-internship-card :$internship :colorScheme="$loop->index % 2 === 0 ? 'indigo' : 'blue'" />
             @empty
-                <div class="col-span-3 text-center py-8">
+                <div class="col-span-3 text-center py-8 text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -471,6 +397,13 @@
                 </div>
             @endforelse
         </div>
+        
+        <!-- Featured Internships Pagination Links -->
+        @if($featuredInternships->hasPages())
+            <div class="mt-8 flex justify-center">
+                {{ $featuredInternships->links() }}
+            </div>
+        @endif
 
         <div class="mt-6 text-center">
             <a href="{{ route('home') }}"

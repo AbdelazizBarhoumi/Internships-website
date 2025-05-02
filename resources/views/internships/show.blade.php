@@ -1,11 +1,11 @@
-<x-layout>
+<x-layout :showHero="false">
     <x-page-heading>{{ auth()->user()?->isEmployer() ? 'Manage Internship' : 'Internship Details' }}</x-page-heading>
 
     <div class="bg-white shadow rounded-lg p-6 mb-6">
         <x-alert-success :message="session('success')" />
 
         @auth
-            @if(auth()->user()->isEmployer())
+            @if(auth()->user()->isEmployer() && $internship->employer_id == auth()->user()->employer->id)
                 @include('internships.partials.employer-view', ['internship' => $internship])
             @else
                 @include('internships.partials.student-view', ['internship' => $internship])

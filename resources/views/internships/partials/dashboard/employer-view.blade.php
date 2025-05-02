@@ -349,7 +349,7 @@
                 <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between border-b px-4 py-2 bg-gray-50">
                         <div class="flex items-center">
-                            @if($internship->is_featured)
+                            @if($internship->featured)
                                 <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full mr-2">Featured</span>
                             @endif
                             <h4 class="font-medium text-gray-900">{{ Str::limit($internship->title, 30) }}</h4>
@@ -382,9 +382,6 @@
                                 </svg>
                                 {{ $internship->applications_count ?? 0 }} Applicants
                             </div>
-                            <div class="text-sm text-gray-600">
-                                {{ ucfirst($internship->type) }}
-                            </div>
                         </div>
                         
                         <div class="flex items-center justify-between mt-4 pt-3 border-t">
@@ -406,7 +403,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
-                                {{ $internship->views ?? 0 }} Views
+                                {{ $internship->view_count ?? 0 }} Views
                             </div>
                         </div>
                     </div>
@@ -433,48 +430,4 @@
             </a>
         </div>
     @endif
-</div>
-
-<!-- Recent Hiring Activity -->
-<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-    <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Hiring Activity</h3>
-        
-        <div class="space-y-4">
-            @if(isset($recentActivity) && $recentActivity->count() > 0)
-                @foreach($recentActivity as $activity)
-                    <div class="flex items-start">
-                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-gray-800 font-medium">{{ $activity->description }}</p>
-                            <div class="flex items-center mt-1">
-                                <span class="text-sm text-gray-500">{{ $activity->created_at->diffForHumans() }}</span>
-                                <span class="mx-2 text-gray-400">•</span>
-                                <span class="text-sm text-gray-500">{{ $activity->internship->title ?? 'Unknown internship' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="text-center py-6">
-                    <p class="text-gray-500">No recent activity to display.</p>
-                </div>
-            @endif
-        </div>
-        
-        @if(isset($recentActivity) && $recentActivity->count() > 0)
-            <div class="mt-6 text-center">
-                <a href="{{ route('employer.activity') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    View All Activity
-                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
-            </div>
-        @endif
-    </div>
 </div>

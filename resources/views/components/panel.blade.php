@@ -1,5 +1,5 @@
 @php
-$classes = 'p-4 bg-white/5 rounded-xl border border-transparent';
+$classes = 'p-4 bg-black/10 rounded-xl border';
 @endphp
 <div {{ $attributes(['class' => $classes]) }}> 
 {{$slot}}

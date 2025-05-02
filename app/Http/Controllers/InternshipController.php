@@ -43,7 +43,7 @@ class InternshipController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Internship::with(['employer', 'tags'])
+        $baseQuery = Internship::with(['employer', 'tags'])
             // Only show internships from active users
             ->whereHas('employer.user', function($query) {
                 $query->where('is_active', true);
@@ -53,16 +53,24 @@ class InternshipController extends Controller
         
         // Filter by employer if viewing own listings
         if ($request->has('employer') && Auth::check() && Auth::user()->isEmployer()) {
-            $query->where('employer_id', Auth::user()->employer->id);
+            $baseQuery->where('employer_id', Auth::user()->employer->id);
         }
         
-        $internships = $query->orderBy('created_at', 'desc')
-                            ->paginate(10)
-                            ->groupBy('featured');
+        // Get featured internships with pagination
+        $featuredInternships = (clone $baseQuery)
+            ->where('featured', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(6, ['*'], 'featured_page'); // Use 'featured_page' as the page parameter
+            
+        // Get regular internships with pagination (use a different page parameter)
+        $regularInternships = $baseQuery
+            ->where('featured', false)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'page'); // Use default 'page' parameter
                             
         return view('internships.index', [
-            'featuredInternships' => $internships[1] ?? collect(),
-            'internships' => $internships[0] ?? collect(),
+            'featuredInternships' => $featuredInternships,
+            'internships' => $regularInternships,
             'tags' => Tag::whereHas('internships', function($query) {
                 $query->whereHas('employer.user', function($subQuery) {
                     $subQuery->where('is_active', true);
@@ -151,9 +159,6 @@ class InternshipController extends Controller
             'description' => ['nullable', 'string', 'max:5000'],
             'duration' => ['nullable', 'string', 'max:255'],
             'deadline_date' => ['nullable', 'date', 'after:today'],
-            'positions' => ['nullable', 'integer', 'min:1'],
-            'requirements' => ['nullable', 'string', 'max:5000'],
-            'type' => ['nullable', 'string', 'max:255'],
             'tags' => ['nullable', 'string', 'max:255'],
         ]);
         
@@ -174,15 +179,35 @@ class InternshipController extends Controller
             }
         }
         
-        return redirect()->route('myinternship.show', $internship)
+        return redirect()->route('internship.show', $internship)
             ->with('success', 'Internship created successfully!');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified internship.
+     *
+     * @param  \App\Models\Internship  $internship
+     * @return \Illuminate\Http\Response
      */
     public function show(Internship $internship)
     {
+        // Only increment the view count if:
+        // 1. The viewer is not the owner of the internship
+        // 2. We're not in an admin context
+        
+        if (auth()->guest() || auth()->id() !== $internship->employer_id) {
+            // You could use a session to prevent multiple views in same session
+            $viewedInternships = session()->get('viewed_internships', []);
+            
+            if (!in_array($internship->id, $viewedInternships)) {
+                $internship->incrementViewCount();
+                
+                // Add this internship to the viewed list
+                $viewedInternships[] = $internship->id;
+                session()->put('viewed_internships', $viewedInternships);
+            }
+        }
+        
         // Ensure inactive users' internships are not visible unless to the owner or admin
         $isOwner = Auth::check() && Auth::user()->isEmployer() && 
                   Auth::user()->employer->id === $internship->employer_id;
@@ -246,9 +271,6 @@ class InternshipController extends Controller
             'description' => ['nullable', 'string', 'max:5000'],
             'duration' => ['nullable', 'string', 'max:255'],
             'deadline_date' => ['nullable', 'date', 'after:today'],
-            'positions' => ['nullable', 'integer', 'min:1'],
-            'requirements' => ['nullable', 'string', 'max:5000'],
-            'type' => ['nullable', 'string', 'max:255'],
             'tags' => ['nullable', 'string', 'max:255'],
         ]);
         
@@ -270,7 +292,7 @@ class InternshipController extends Controller
             }
         }
         
-        return redirect()->route('myinternship.show', $internship)
+        return redirect()->route('internship.show', $internship)
             ->with('success', 'Internship updated successfully!');
     }
 

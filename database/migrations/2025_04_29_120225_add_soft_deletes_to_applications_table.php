@@ -26,18 +26,6 @@ return new class extends Migration
                 $table->dateTime('interview_date')->nullable();
             }
             
-            if (!Schema::hasColumn('applications', 'interview_location')) {
-                $table->string('interview_location')->nullable();
-            }
-            
-            if (!Schema::hasColumn('applications', 'interview_details')) {
-                $table->text('interview_details')->nullable();
-            }
-            
-            if (!Schema::hasColumn('applications', 'interview_notes')) {
-                $table->text('interview_notes')->nullable();
-            }
-            
             if (!Schema::hasColumn('applications', 'response_date')) {
                 $table->dateTime('response_date')->nullable();
             }
@@ -54,19 +42,6 @@ return new class extends Migration
             if (Schema::hasColumn('applications', 'response_date')) {
                 $table->dropColumn('response_date');
             }
-            
-            if (Schema::hasColumn('applications', 'interview_notes')) {
-                $table->dropColumn('interview_notes');
-            }
-            
-            if (Schema::hasColumn('applications', 'interview_details')) {
-                $table->dropColumn('interview_details');
-            }
-            
-            if (Schema::hasColumn('applications', 'interview_location')) {
-                $table->dropColumn('interview_location');
-            }
-            
             if (Schema::hasColumn('applications', 'interview_date')) {
                 $table->dropColumn('interview_date');
             }

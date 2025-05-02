@@ -39,7 +39,6 @@ class InternshipFactory extends Factory
                 'Ongoing'
             ]),
             'deadline_date' => fake()->dateTimeBetween('+1 week', '+3 months'),
-            'positions' => fake()->numberBetween(1, 5),
             'featured' => fake()->boolean(20), // 20% chance of being featured
         ];
     }

@@ -67,39 +67,65 @@
                 </div>
             </div>
             
-            <!-- Application Status Update -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4">Update Application Status</h3>
-                    
-                    <form action="{{ route('admin.applications.update-status', $application) }}" method="POST">
-                        @csrf
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                <select name="status" id="status" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200">
-                                    <option value="pending" {{ $application->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="reviewing" {{ $application->status === 'reviewing' ? 'selected' : '' }}>Reviewing</option>
-                                    <option value="accepted" {{ $application->status === 'accepted' ? 'selected' : '' }}>Accepted</option>
-                                    <option value="rejected" {{ $application->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label for="admin_notes" class="block text-sm font-medium text-gray-700 mb-1">Admin Notes (Internal Only)</label>
-                                <textarea name="admin_notes" id="admin_notes" rows="4" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200">{{ $application->admin_notes }}</textarea>
-                            </div>
+<!-- Application Status Information (Read-Only) -->
+<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+    <div class="p-6 text-gray-900">
+        <h3 class="text-lg font-semibold mb-4">Application Status</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <div class="mb-4">
+                    <p class="text-sm font-medium text-gray-700 mb-1">Current Status</p>
+                    <div class="px-3 py-2 border bg-gray-50 rounded-md">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium
+                            {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                            {{ $application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' : '' }}
+                            {{ $application->status === 'accepted' ? 'bg-green-100 text-green-800' : '' }}
+                            {{ $application->status === 'rejected' ? 'bg-red-100 text-red-800' : '' }}">
+                            {{ ucfirst($application->status) }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Status last updated: {{ $application->updated_at->format('F j, Y g:i A') }}</p>
+                </div>
+                
+                <div>
+                    <p class="text-sm font-medium text-gray-700 mb-1">Application History</p>
+                    <div class="border rounded-md divide-y">
+                        <div class="px-3 py-2 bg-gray-50">
+                            <p class="text-sm">
+                                <span class="font-medium">Applied</span> on {{ $application->created_at->format('F j, Y') }}
+                            </p>
                         </div>
-                        
-                        <div class="mt-4">
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                Update Status
-                            </button>
-                        </div>
-                    </form>
+                        @if($application->status_updates)
+                            @foreach(json_decode($application->status_updates) as $update)
+                                <div class="px-3 py-2">
+                                    <p class="text-sm">
+                                        <span class="font-medium">{{ ucfirst($update->status) }}</span> 
+                                        on {{ \Carbon\Carbon::parse($update->timestamp)->format('F j, Y') }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </div>
+            
+            <div>
+                <p class="text-sm font-medium text-gray-700 mb-1">Admin Notes (Internal Only)</p>
+                <form action="{{ route('admin.applications.update-status', $application) }}" method="POST">
+                    @csrf
+                    <textarea name="admin_notes" id="admin_notes" rows="4" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200">{{ $application->admin_notes }}</textarea>
+                    <div class="mt-2">
+                        <button type="submit" class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                            Update Notes
+                        </button>
+                    </div>
+                </form>
+                <p class="text-xs text-gray-500 mt-1">These notes are only visible to administrators.</p>
+            </div>
+        </div>
+    </div>
+</div>
             
             <!-- Application Details -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">

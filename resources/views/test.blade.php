@@ -1,244 +1,436 @@
-<x-app-layout>
-    <!-- Page Header -->
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ $application->internship->title }}
-            </h2>
-            <div>
-                <a href="{{ route('myinternship.show', $application->internship) }}"
-                    class="text-indigo-600 hover:text-indigo-800">
-                    View Internship Details
-                </a>
+<x-layout>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Internship Card Style Test</h1>
+        
+        <h2 class="text-lg font-medium text-gray-800 mb-4">Style 1: Detailed Cards (1 per row)</h2>
+        
+        <!-- Detailed Internship Cards (1-per-row) -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-12">
+            <!-- Detailed Card 1 -->
+            <div class="relative bg-white border border-gray-100 hover:border-indigo-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row gap-5">
+                        <!-- Company Logo -->
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 bg-indigo-50 rounded-lg border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 leading-tight hover:text-indigo-700 transition-colors">
+                                        <a href="#" class="hover:underline decoration-2 decoration-indigo-500 underline-offset-2"> 
+                                            Frontend Developer Intern
+                                        </a>
+                                    </h3>
+                                    <div class="flex items-center mt-1.5 text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                        <span class="text-sm">TechVision Solutions</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2 sm:mt-0 flex space-x-2">
+                                    <!-- Moved Paid badge here, next to days left badge -->
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                        Paid
+                                    </span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        7 days left
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Brief Description -->
+                            <p class="mt-3 text-sm text-gray-600 line-clamp-2">
+                                Join our innovative team and gain hands-on experience building responsive web applications using React, TypeScript, and modern CSS frameworks.
+                            </p>
+                            
+                            <!-- Location and Details -->
+                            <div class="flex flex-wrap items-center mt-4 gap-x-4 gap-y-2 text-sm">
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    San Francisco
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Full-time
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    $25-30/hour
+                                </div>
+                            </div>
+
+                            <!-- Tags -->
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    React
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    TypeScript
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Frontend
+                                </span>
+                            </div>
+                            
+                            <!-- Footer with posted time and apply button -->
+                            <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex items-center text-xs text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Posted 3 days ago
+                                </div>
+                                <div class="mt-3 sm:mt-0 flex">
+                                    <button class="inline-flex items-center text-indigo-600 hover:text-indigo-800 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                        </svg>
+                                        Save
+                                    </button>
+                                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                        Apply Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Card 2 -->
+            <div class="relative bg-white border border-gray-100 hover:border-indigo-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row gap-5">
+                        <!-- Company Logo -->
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 bg-blue-50 rounded-lg border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 leading-tight hover:text-blue-700 transition-colors">
+                                        <a href="#" class="hover:underline decoration-2 decoration-blue-500 underline-offset-2"> 
+                                            Data Science Intern
+                                        </a>
+                                    </h3>
+                                    <div class="flex items-center mt-1.5 text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                        <span class="text-sm">DataBlend Analytics</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2 sm:mt-0 flex space-x-2">
+                                    <!-- Moved Remote badge here, next to days left badge -->
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                                        Remote
+                                    </span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        14 days left
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Brief Description -->
+                            <p class="mt-3 text-sm text-gray-600 line-clamp-2">
+                                Perfect opportunity for students passionate about data science. You'll work with our analytics team to collect, process, and analyze large datasets.
+                            </p>
+                            
+                            <!-- Location and Details -->
+                            <div class="flex flex-wrap items-center mt-4 gap-x-4 gap-y-2 text-sm">
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    Remote
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Part-time
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    $22/hour
+                                </div>
+                            </div>
+
+                            <!-- Tags -->
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Python
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Data Analysis
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Machine Learning
+                                </span>
+                            </div>
+                            
+                            <!-- Footer with posted time and apply button -->
+                            <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex items-center text-xs text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Posted 1 week ago
+                                </div>
+                                <div class="mt-3 sm:mt-0 flex">
+                                    <button class="inline-flex items-center text-blue-600 hover:text-blue-800 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                        </svg>
+                                        Save
+                                    </button>
+                                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                        Apply Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Applicant Header -->
-            <div class="sticky top-0 z-30 bg-white shadow-sm rounded-lg p-4 mb-6">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <h1 class="text-xl font-semibold">
-                            {{ $application->user->name }}
-                        </h1>
-                        <span class="px-3 py-1 text-sm font-medium rounded-full
-                            @if($application->status == 'accepted') bg-green-100 text-green-800
-                            @elseif($application->status == 'rejected') bg-red-100 text-red-800
-                            @elseif($application->status == 'interviewed') bg-purple-100 text-purple-800
-                            @elseif($application->status == 'reviewing') bg-blue-100 text-blue-800
-                            @else bg-yellow-100 text-yellow-800 @endif">
-                            {{ ucfirst($application->status) }}
-                        </span>
-                    </div>
-                    <div>
-                        <span class="text-gray-500 text-sm">
-                            Applied {{ $application->created_at->format('M j, Y') }}
-                            ({{ $application->created_at->diffForHumans() }})
+        
+        <h2 class="text-lg font-medium text-gray-800 mb-4">Style 2: Compact Cards (3 per row)</h2>
+        
+        <!-- Compact Internship Cards (3-per-row) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- No changes needed to the compact cards since they don't have the overlap issue -->
+            <!-- Compact Card 1 -->
+            <div class="bg-white border border-gray-100 hover:border-indigo-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                <div class="border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-white px-4 py-3">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-md bg-indigo-100 flex items-center justify-center mr-3 border border-indigo-200">
+                                <span class="text-indigo-700 font-semibold text-sm">MS</span>
+                            </div>
+                            <h4 class="font-medium text-gray-900 truncate">MindShare Technologies</h4>
+                        </div>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                            Paid
                         </span>
                     </div>
                 </div>
-
-                <div class="flex items-center flex-wrap gap-3 mt-6">
-                    <div class="flex-grow flex gap-2">
-                        <form method="POST" action="{{ route('applications.update-status', $application) }}"
-                            class="flex">
-                            @csrf
-                            @method('PATCH')
-                            <select name="status"
-                                class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="">Change Status</option>
-                                <option value="pending" {{ $application->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="reviewing" {{ $application->status == 'reviewing' ? 'selected' : '' }}>Reviewing</option>
-                                <option value="interviewed" {{ $application->status == 'interviewed' ? 'selected' : '' }}>Interviewed</option>
-                                <option value="accepted" {{ $application->status == 'accepted' ? 'selected' : '' }}>Accept</option>
-                                <option value="rejected" {{ $application->status == 'rejected' ? 'selected' : '' }}>Reject</option>
-                            </select>
-                            <button type="submit"
-                                class="ml-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-                                Update Status
-                            </button>
-                        </form>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="mailto:{{ $application->user->email }}"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            Email Applicant
+                
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 leading-snug mb-2 hover:text-indigo-700 transition-colors">
+                        <a href="#" class="hover:underline decoration-2 decoration-indigo-500 underline-offset-2">
+                            UI/UX Design Intern
                         </a>
-                        <a href="{{ route('applications.index', ['internship_id' => $application->internship_id]) }}"
-                            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 19l-7-7 7-7" />
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                            UI/UX
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Figma
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Design
+                        </span>
+                    </div>
+                    
+                    <div class="flex flex-wrap text-xs text-gray-600 mb-3 gap-x-3 gap-y-1">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             </svg>
-                            All Applications
+                            New York
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Full-time
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-xs text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-amber-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            5 days left
+                        </div>
+                        <a href="#" class="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-0.5 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
                         </a>
                     </div>
                 </div>
             </div>
-
-            <!-- Success Message -->
-            @if(session('success'))
-                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Two Column Layout with Fixed Left Column -->
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 min-h-[calc(100vh-8rem)]">
-                <!-- Fixed Left Column: Applicant Information (2/6) -->
-                <div class="col-span-2 md:sticky md:top-[5.5rem] md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto">
-                    <!-- Applicant Information Card -->
-                    <div class="bg-white shadow-sm rounded-lg mb-6">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Applicant Information</h3>
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-500">Name</p>
-                                <p class="font-medium">{{ $application->user->name }}</p>
+            <!-- Compact Card 2 -->
+            <div class="bg-white border border-gray-100 hover:border-purple-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                <div class="border-b border-gray-100 bg-gradient-to-r from-purple-50 to-white px-4 py-3">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-md bg-purple-100 flex items-center justify-center mr-3 border border-purple-200">
+                                <span class="text-purple-700 font-semibold text-sm">GM</span>
                             </div>
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-500">Email</p>
-                                <p class="font-medium">
-                                    <a href="mailto:{{ $application->user->email }}"
-                                        class="text-indigo-600 hover:underline">
-                                        {{ $application->user->email }}
-                                    </a>
-                                </p>
-                            </div>
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-500">Phone</p>
-                                @if($application->phone)
-                                    <p class="font-medium">
-                                        <a href="tel:{{ $application->phone }}" class="text-indigo-600 hover:underline">
-                                            {{ $application->phone }}
-                                        </a>
-                                    </p>
-                                @else
-                                    <p class="text-gray-500 italic">Not provided</p>
-                                @endif
-                            </div>
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-500">Available to Start</p>
-                                @if($application->availability)
-                                    <p class="font-medium">{{ date('F j, Y', strtotime($application->availability)) }}</p>
-                                @else
-                                    <p class="text-gray-500 italic">Not specified</p>
-                                @endif
-                            </div>
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-500">Education</p>
-                                @if($application->education)
-                                    <p class="font-medium">{{ ucfirst(str_replace('_', ' ', $application->education)) }}</p>
-                                @else
-                                    <p class="text-gray-500 italic">Not specified</p>
-                                @endif
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Institution</p>
-                                @if($application->institution)
-                                    <p class="font-medium">{{ $application->institution }}</p>
-                                @else
-                                    <p class="text-gray-500 italic">Not specified</p>
-                                @endif
-                            </div>
+                            <h4 class="font-medium text-gray-900 truncate">GrowthGenius Marketing</h4>
                         </div>
-                    </div>
-
-                    <!-- Employer Notes Section -->
-                    <div class="bg-white shadow-sm rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Employer Notes</h3>
-                            <form method="POST" action="{{ route('applications.update-notes', $application) }}">
-                                @csrf
-                                @method('PATCH')
-                                <div class="mb-4">
-                                    <textarea name="notes" rows="4"
-                                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                        placeholder="Add private notes about this applicant...">{{ $application->notes }}</textarea>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button type="submit"
-                                        class="bg-gray-800 text-white px-4 py-2 text-sm rounded-md hover:bg-gray-700">
-                                        Save Notes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                            New
+                        </span>
                     </div>
                 </div>
-
-                <!-- Right Column: Application Details (4/6) - Scrollable content -->
-                <div class="col-span-4">
-                    <!-- Documents -->
-                    <div class="bg-white shadow-sm rounded-lg mb-6">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Documents</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                @if($application->resume_path)
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 mr-3"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                </svg>
-                                                <div>
-                                                    <p class="font-medium">Resume</p>
-                                                    <p class="text-sm text-gray-500">PDF Document</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex">
-                                                <a href="{{ Storage::url($application->resume_path) }}" target="_blank"
-                                                    class="text-indigo-600 hover:text-indigo-900 px-2">View</a>
-                                                <a href="{{ Storage::url($application->resume_path) }}" download
-                                                    class="text-indigo-600 hover:text-indigo-900 px-2">Download</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if($application->transcript_path)
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 mr-3"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                <div>
-                                                    <p class="font-medium">Transcript</p>
-                                                    <p class="text-sm text-gray-500">PDF Document</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex">
-                                                <a href="{{ Storage::url($application->transcript_path) }}" target="_blank"
-                                                    class="text-indigo-600 hover:text-indigo-900 px-2">View</a>
-                                                <a href="{{ Storage::url($application->transcript_path) }}" download
-                                                    class="text-indigo-600 hover:text-indigo-900 px-2">Download</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if(!$application->resume_path && !$application->transcript_path)
-                                    <div class="col-span-2 text-center py-4 text-gray-500">
-                                        No documents uploaded with this application
-                                    </div>
-                                @endif
-                            </div>
+                
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 leading-snug mb-2 hover:text-purple-700 transition-colors">
+                        <a href="#" class="hover:underline decoration-2 decoration-purple-500 underline-offset-2">
+                            Marketing & Social Media Intern
+                        </a>
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            Social Media
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Content
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Analytics
+                        </span>
+                    </div>
+                    
+                    <div class="flex flex-wrap text-xs text-gray-600 mb-3 gap-x-3 gap-y-1">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                            Chicago
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Part-time
                         </div>
                     </div>
-
-                    <!-- Rest of your content remains the same -->
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-xs text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Posted yesterday
+                        </div>
+                        <a href="#" class="inline-flex items-center text-xs font-medium text-purple-600 hover:text-purple-800">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-0.5 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Compact Card 3 -->
+            <div class="bg-white border border-gray-100 hover:border-green-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                <div class="border-b border-gray-100 bg-gradient-to-r from-green-50 to-white px-4 py-3">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-md bg-green-100 flex items-center justify-center mr-3 border border-green-200">
+                                <span class="text-green-700 font-semibold text-sm">EF</span>
+                            </div>
+                            <h4 class="font-medium text-gray-900 truncate">EcoFuture Innovations</h4>
+                        </div>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                            Paid
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 leading-snug mb-2 hover:text-green-700 transition-colors">
+                        <a href="#" class="hover:underline decoration-2 decoration-green-500 underline-offset-2">
+                            Environmental Research Assistant
+                        </a>
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Research
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Sustainability
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            Science
+                        </span>
+                    </div>
+                    
+                    <div class="flex flex-wrap text-xs text-gray-600 mb-3 gap-x-3 gap-y-1">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                            Portland, OR
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Summer
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-xs text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Posted 2 days ago
+                        </div>
+                        <a href="#" class="inline-flex items-center text-xs font-medium text-green-600 hover:text-green-800">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-0.5 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-layout>

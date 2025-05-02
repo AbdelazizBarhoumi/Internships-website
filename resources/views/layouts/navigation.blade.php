@@ -18,14 +18,21 @@
                         {{ __('Admin Dashboard') }}
                     </x-nav-link>
                     @else
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard*')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                      @endcan
+                    @can('employer')
 
                     <x-nav-link :href="route('myInternships')" :active="request()->routeIs('myInternships')">
                         {{ __('My Internships') }}
                     </x-nav-link>
+                   
+                    @else
+                     <x-nav-link :href="route('applications.my.index')" :active="request()->routeIs('*applications*')">
+                        {{ __('All Applicants') }}
+                    </x-nav-link>
+                        @endcan
 
                    
                     

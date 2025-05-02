@@ -2,7 +2,7 @@
 @php
 $classes = ($highlight 
     ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
-    : 'bg-gray-100 text-gray-800 hover:bg-gray-200') . ' rounded-md font-medium transition-colors duration-200';
+    : 'bg-gray-100 text-gray-800 hover:bg-indigo-100 hover:text-indigo-800 transition-colors') . ' rounded-full font-medium transition-colors duration-200';
     
     if ($size == 'base') {
         $classes .= ' text-sm px-4 py-1';

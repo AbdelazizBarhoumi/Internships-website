@@ -29,7 +29,9 @@ class ApplicationController extends Controller
         }
         
         // Authorization check
-        if (!Auth::user()->employer && !Auth::user()->isAdmin()) {
+        //   @if(auth()->user()->isEmployer() && $internship->employer_id == auth()->user()->employer->id)
+
+        if (!Auth::user()->isEmployer() && !Auth::user()->isAdmin()) {
             return $this->unauthorizedAccess('You do not have permission to view all applications');
         }
         

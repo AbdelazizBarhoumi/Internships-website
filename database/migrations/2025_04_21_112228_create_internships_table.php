@@ -22,11 +22,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('duration')->nullable();
             $table->date('deadline_date')->nullable();
-            $table->integer('positions')->nullable();
             $table->boolean('featured')->default(false);
             $table->boolean('is_active')->default(true);
-            $table->string('type')->default('internship'); // internship, part-time, full-time, etc.
-            $table->string('requirements')->nullable();
 
             $table->timestamps();
         });

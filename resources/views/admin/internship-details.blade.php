@@ -55,10 +55,6 @@
                                         <span>{{ $internship->duration }}</span>
                                     </div>
                                     <div>
-                                        <span class="text-gray-500">Type:</span>
-                                        <span>{{ $internship->type }}</span>
-                                    </div>
-                                    <div>
                                         <span class="text-gray-500">Posted:</span>
                                         <span>{{ $internship->created_at->format('F j, Y') }}</span>
                                     </div>
@@ -89,23 +85,10 @@
                                 {!! nl2br(e($internship->description)) !!}
                             </div>
                         </div>
-
-                        <div class="mt-6">
-                            <h3 class="text-lg font-semibold mb-2">Requirements</h3>
-                            <div class="prose max-w-none">
-                                {!! nl2br(e($internship->requirements)) !!}
-                            </div>
-                        </div>
                     </div>
 
                     <div class="flex space-x-3 mt-8">
-                        <form action="{{ route('admin.internships.toggle-status', $internship) }}" method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="px-4 py-2 {{ $internship->is_active ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded">
-                                {{ $internship->is_active ? 'Deactivate Internship' : 'Activate Internship' }}
-                            </button>
-                        </form>
+
 
                         <button type="button" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                             data-bs-toggle="modal" data-bs-target="#deleteModal">
