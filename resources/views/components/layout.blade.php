@@ -179,7 +179,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="col-span-2">
                     <a href="/" class="flex items-center">
-                        <img src="{{ Vite::asset('resources/images/logo.svg') }}" alt="InternNexus" class="h-8 w-auto">
+                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                     <p class="mt-4 text-gray-600 text-sm">
                         InternNexus connects talented students with the best internship opportunities worldwide.

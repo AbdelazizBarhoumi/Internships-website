@@ -9,17 +9,22 @@
     // Calculate days until deadline
     $daysLeft = null;
     $deadlineStatus = null;
-    if ($internship->deadline) {
-        $deadline = \Carbon\Carbon::parse($internship->deadline);
-        $daysLeft = now()->diffInDays($deadline, false);
+    $urgentClass = 'text-gray-400';
+    
+    if ($internship->deadline_date) {
+        $deadline = \Carbon\Carbon::parse($internship->deadline_date);
+        $isFuture = $deadline->isFuture();
         
-        if ($daysLeft < 0) {
+        if ($isFuture) {
+            $daysLeft = round(now()->diffInDays($deadline, false));
+            if ($daysLeft <= 3) {
+                $deadlineStatus = 'expiring';
+                $urgentClass = 'text-amber-500';
+            }
+        } else {
             $deadlineStatus = 'expired';
-        } elseif ($daysLeft <= 3) {
-            $deadlineStatus = 'expiring';
         }
     }
-    
     // Define color classes based on the color scheme
     $colors = [
         'indigo' => [
@@ -196,9 +201,9 @@
                         Posted {{ $internship->created_at->diffForHumans() }}
                     </div>
                     <div class="mt-3 sm:mt-0 flex">
-                        @if($showApplyButton)
+                        @if($showApplyButton )
                             <a href="{{ route('internship.show', $internship) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white {{ $color['primary-button'] }} focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors">
-                                Apply Now
+                                {{$internship->employer ? 'See more' : 'Apply Now'}}
                             </a>
                         @endif
                     </div>

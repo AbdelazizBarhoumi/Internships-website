@@ -140,9 +140,13 @@
         
         <!-- Footer - always at the bottom -->
         <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
-            @if($internship->deadline && \Carbon\Carbon::parse($internship->deadline)->isFuture())
+            @php
+                $deadlineDate = $internship->deadline_date ? \Carbon\Carbon::parse($internship->deadline_date) : null;
+                $isFuture = $deadlineDate && $deadlineDate->isFuture();
+            @endphp
+            @if($deadlineDate && $isFuture)
                 @php
-                    $daysLeft = now()->diffInDays(\Carbon\Carbon::parse($internship->deadline_date), false);
+                    $daysLeft = round(now()->diffInDays($deadlineDate, false));
                     $urgentClass = $daysLeft <= 3 ? 'text-amber-500' : 'text-gray-400';
                 @endphp
                 <div class="flex items-center text-xs text-gray-500">
@@ -152,12 +156,21 @@
                     {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} left
                 </div>
             @else
-                <div class="flex items-center text-xs text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Posted {{ $internship->created_at->diffForHumans() }}
-                </div>
+                @if($deadlineDate && $deadlineDate->isPast())
+                    <div class="flex items-center text-xs text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-red-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Expired
+                    </div>
+                @else
+                    <div class="flex items-center text-xs text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Posted {{ $internship->created_at->diffForHumans() }}
+                    </div>
+                @endif
             @endif
             
             <a href="{{ route('internship.show', $internship) }}" class="inline-flex items-center text-xs font-medium {{ $color['button'] }}">

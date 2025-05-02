@@ -73,33 +73,6 @@
                     </div>
                 </form>
 
-                <div class="mt-6 relative">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
-                    </div>
-                </div>
-
-                <div class="mt-6 grid grid-cols-2 gap-3">
-                    <a href="#" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                        <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="#4285F4" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5.9c1.16 0 2.2.5 3.03 1.32L17.9 4.35C16.33 2.85 14.28 2 12 2 8.84 2 5.7 4.25 4.53 7.3L8.06 9.9c.75-2.3 2.9-4 5.94-4z" fill="#EA4335"></path>
-                            <path d="M21.8 12.29c0-.78-.07-1.53-.2-2.25H12v4.25h5.92c-.26 1.39-1.04 2.58-2.21 3.37l3.47 2.69c2.01-1.86 3.17-4.6 3.17-7.83z" fill="#4285F4"></path>
-                            <path d="M8.06 14.1c-.45 1.38-1.45 2.54-2.8 3.16l3.58 2.77c2.16-2 3.41-4.93 3.41-8.36 0-.1 0-.19-.01-.29H8.06v2.72z" fill="#FBBC05"></path>
-                            <path d="M5.26 17.26c-2.75-2.75-2.75-7.21 0-9.96l-3.58-2.77c-4.2 4.2-4.2 11 0 15.32l3.58-2.59z" fill="#34A853"></path>
-                        </svg>
-                        Google
-                    </a>
-
-                    <a href="#" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                        <svg class="h-5 w-5 mr-2" fill="#1877F2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21.2143 0H2.7857C1.24821 0 0 1.24821 0 2.7857V21.2143C0 22.7518 1.24821 24 2.7857 24H12.75V14.25H9.75V11.25H12.75V9C12.75 6.81964 14.3196 4.5 18 4.5C19.5 4.5 20.7589 4.71429 20.7589 4.71429L20.6786 7.5H18.75C17.1429 7.5 16.5 8.25 16.5 9.75V11.25H20.7857L20.5714 14.25H16.5V24H21.2143C22.7518 24 24 22.7518 24 21.2143V2.7857C24 1.24821 22.7518 0 21.2143 0Z"></path>
-                        </svg>
-                        Facebook
-                    </a>
-                </div>
             </div>
         </div>
 

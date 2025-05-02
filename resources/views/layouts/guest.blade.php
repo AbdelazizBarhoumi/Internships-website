@@ -88,7 +88,6 @@
         <header class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
             <div class="flex justify-between items-center">
                 <a href="{{ route('home') }}" class="flex items-center">
-                    <x-application-logo class="w-10 h-10 fill-current text-indigo-600" />
                     <span class="ml-3 text-xl font-bold text-gray-900">{{ config('app.name', 'Internship Platform') }}</span>
                 </a>
                 <div class="flex items-center space-x-4">

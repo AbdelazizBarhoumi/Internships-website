@@ -398,8 +398,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Admin Notes -->
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="border-b border-gray-200 bg-gray-50">
                             <div class="px-6 py-3">
@@ -409,11 +407,18 @@
                         <div class="p-6">
                             <form action="{{ route('admin.applications.update-notes', $application) }}" method="POST">
                                 @csrf
-                                <div>
+                                <div >
+                                @if($application->admin_notes)
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Existing Notes:</h4>
+                                    <div class="bg-gray-50 p-3 rounded-md border border-gray-200 text-gray-700 whitespace-pre-line mb-4">
+                                        {{ $application->admin_notes }}
+                                    </div>
+                                    @endif
                                     <label for="admin_notes" class="sr-only">Notes</label>
+                                    
                                     <textarea id="admin_notes" name="admin_notes" rows="5"
                                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        placeholder="Add private notes about this application...">{{ $application->admin_notes }}</textarea>
+                                        placeholder="Add private notes about this application..."></textarea>
                                 </div>
                                 <div class="mt-2 flex justify-between items-center">
                                     <p class="text-xs text-gray-500">These notes are only visible to administrators.</p>

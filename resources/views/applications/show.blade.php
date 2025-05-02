@@ -288,8 +288,6 @@
                                 </h3>
 
                                 <!-- Existing Notes Section -->
-
-
                                 <form method="POST" action="{{ route('applications.update-notes', $application) }}">
                                     @csrf
                                     @method('PATCH')

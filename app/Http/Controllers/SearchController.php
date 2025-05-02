@@ -96,9 +96,14 @@ class SearchController extends Controller
                 break;
         }
         
+        // Make sure only active internships from active employers are shown
+        $query->where('is_active', true)
+              ->whereHas('employer.user', function ($subQuery) {
+                  $subQuery->where('is_active', true);
+              });
+
         // Execute the query with pagination
         $internships = $query->paginate(10);
-        
         
         // Determine if we're searching for a specific tag
         $searchedTag = $filter;

@@ -102,7 +102,11 @@
                                 <tbody>
                                     @forelse($recentApplications as $application)
                                         <tr>
-                                            <td class="py-2 px-4 border-b">{{ $application->user->name }}</td>
+                                            <td class="py-2 px-4 border-b">
+                                                <a href="{{ route('admin.applications.show', $application) }}" class="text-blue-600 hover:underline">
+                                            {{ $application->user->name }}
+                                                </a>
+                                        </td>
                                             <td class="py-2 px-4 border-b text-center">
                                                 <a href="{{ route('admin.internships.show', $application->internship) }}"
                                                     class="text-blue-600 hover:underline">

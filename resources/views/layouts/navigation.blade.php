@@ -33,9 +33,17 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('applications.my.index')" :active="request()->routeIs('*applications*')">
-                       {{ __('All Applicants') }}
-                   </x-nav-link>
+                    
+                    @php
+                    if (auth()->user()->isEmployer()) {
+                        $route = route('applications.index');
+                    } else {
+                        $route = route('applications.my.index');
+                    }
+                    @endphp
+                    <x-nav-link :href="$route" :active="request()->routeIs('*applications*')">
+                        {{ __('My Applications') }}
+                    </x-nav-link>
                    
                      @endcan
                      

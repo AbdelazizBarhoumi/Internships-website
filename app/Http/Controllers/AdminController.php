@@ -441,12 +441,28 @@ class AdminController extends Controller
         ]);
 
 
-        if (isset($validated['admin_notes'])) {
-            $application->admin_notes = $validated['admin_notes'];
+
+        try {
+            $this->addNotesToApplication($application, $validated['admin_notes']);
+            return back()->with('success', 'Application notes have been updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Failed to update application notes: ' . $e->getMessage());
+            return back()->with('error', 'Failed to update notes. Please try again.');
         }
-
+    }
+    private function addNotesToApplication(Application $application, $admin_notes)
+    {
+        // Format admin_notes with timestamp and user info
+        $noteWithMeta = "[" . now()->format('M j, Y g:i A') . " - " . Auth::user()->name . "]\n";
+        $noteWithMeta .= $admin_notes . "\n\n";
+        
+        // Append to existing notes or create new
+        if ($application->admin_notes) {
+            $application->admin_notes .= $noteWithMeta;
+        } else {
+            $application->admin_notes = $noteWithMeta;
+        }
+        
         $application->save();
-
-        return back()->with('success', 'Application Notes updated successfully.');
     }
 }
