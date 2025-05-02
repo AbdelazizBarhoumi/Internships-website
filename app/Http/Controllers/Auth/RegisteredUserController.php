@@ -117,7 +117,7 @@ class RegisteredUserController extends Controller
             'field_of_study' => ['nullable', 'string', 'max:255'],
             'graduation_date' => ['nullable', 'date'],
             'skills' => ['nullable', 'string', 'max:500'],
-            'resume' => ['nullable', 'file', 'mimes:pdf', 'max:5120'], // 5MB max
+            'resume' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'], // 5MB max
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'github_url' => ['nullable', 'url', 'max:255'],
             'portfolio_url' => ['nullable', 'url', 'max:255'],
@@ -288,7 +288,7 @@ class RegisteredUserController extends Controller
             'field_of_study' => ['nullable', 'string', 'max:255'],
             'graduation_date' => ['nullable', 'date'],
             'skills' => ['nullable', 'string', 'max:500'],
-            'resume' => ['nullable', 'file', 'mimes:pdf', 'max:5120'], // 5MB max
+            'resume' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'], // 5MB max
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'github_url' => ['nullable', 'url', 'max:255'],
             'portfolio_url' => ['nullable', 'url', 'max:255'],

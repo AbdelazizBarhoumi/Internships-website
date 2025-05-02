@@ -6,7 +6,6 @@ use App\Models\Application;
 use App\Models\Internship;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Helpers\Settings;
 
 class ApplicationPolicy
 {
@@ -49,15 +48,6 @@ class ApplicationPolicy
         // Check if employer is active
         if (!$internship->employer->user->is_active) {
             return false;
-        }
-
-        // Check if user has reached max applications limit
-        $maxApplications = Settings::get('max_applications_per_user', 0);
-        if ($maxApplications > 0) {
-            $currentApplicationsCount = $user->applications()->count();
-            if ($currentApplicationsCount >= $maxApplications) {
-                return false;
-            }
         }
 
         return true;

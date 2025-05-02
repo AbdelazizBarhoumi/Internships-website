@@ -243,6 +243,7 @@
                 </div>
             @else
                 <div class="text-sm font-medium text-gray-500">
+                    {{ dd($application->internship->employer) }}
                     {{ $application->internship->title }}
                 </div>
                 <div class="text-xs text-red-500">
